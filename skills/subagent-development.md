@@ -126,11 +126,43 @@ Report: APPROVED or ISSUES_FOUND with specific items
 
 ## Model Selection Guide
 
-| Task Type | Model Choice |
-|-----------|-------------|
-| Mechanical implementation (clear spec, isolated) | Fast/cheap model |
-| Integration work (multi-file coordination) | Standard model |
-| Architecture decisions, complex review | Most capable model |
+| Task Type | Model | Rationale |
+|-----------|-------|-----------|
+| Simple file search, exploration | Haiku (fast/cheap) | Low complexity, high volume |
+| Mechanical implementation (clear spec) | Haiku/Sonnet | Well-defined, no ambiguity |
+| Multi-file implementation | Sonnet (balanced) | Coordination needed |
+| Code review, test writing | Sonnet | Requires understanding |
+| Architecture, complex debugging | Opus (deep) | Multi-system reasoning |
+| Security audit, novel algorithms | Opus | Can't afford to miss anything |
+
+### Model Upgrade Triggers
+- First attempt failed → try one tier higher
+- Task spans 5+ files → Sonnet minimum
+- Security-critical code → Opus always
+- User explicitly asks for thoroughness → Opus
+
+---
+
+## Iterative Retrieval in Subagents
+
+When a subagent needs to discover its own context:
+
+```
+Phase 1: DISPATCH → Broad search with initial keywords
+Phase 2: EVALUATE → Score relevance of each result (0-1)
+Phase 3: REFINE → Narrow search based on gaps
+Phase 4: LOOP → Repeat if avg relevance < 0.8 (max 3 cycles)
+```
+
+Add to subagent dispatch prompt:
+```
+You may need to search for context. Use this approach:
+1. Start with broad searches for the relevant module
+2. Score each result's relevance (0-1)
+3. Follow the most relevant leads deeper
+4. Stop after 3 search cycles maximum
+5. Report what you found and what gaps remain
+```
 
 ---
 

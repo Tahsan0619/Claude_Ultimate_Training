@@ -77,3 +77,34 @@ Before making ANY success claim, execute this sequence:
     → "Verified: all 47 tests pass, clean output"
     → Commit with confidence
 ```
+
+---
+
+## Eval-Driven Development (Advanced)
+
+For high-stakes features, define evals BEFORE coding:
+
+### Capability Eval
+```markdown
+[CAPABILITY EVAL: feature-name]
+Task: What Claude should accomplish
+Success Criteria:
+  - [ ] Criterion 1
+  - [ ] Criterion 2
+Expected Output: Description of expected result
+```
+
+### Regression Eval
+```markdown
+[REGRESSION EVAL: feature-name]
+Baseline: Previous passing state
+Tests:
+  - existing-test-1: PASS/FAIL
+  - existing-test-2: PASS/FAIL
+Result: X/Y passed
+```
+
+### Quality Metrics
+- **pass@1:** Succeeds on first try (target: >80%)
+- **pass@3:** At least one success in 3 tries (target: >90%)
+- **pass^3:** All 3 tries succeed (target: 100% for critical paths)

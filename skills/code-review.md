@@ -81,3 +81,63 @@ Provide the reviewer with:
 - [ ] No hardcoded secrets, URLs, or credentials
 - [ ] Changes match the spec — nothing more, nothing less
 - [ ] Git diff makes sense as a coherent change
+
+---
+
+## The Code Archaeologist (Before Modifying Unfamiliar Code)
+
+Before changing code you don't fully understand, do a read-only exploration:
+
+1. **Map the architecture** — draw the component structure (ASCII/Mermaid)
+2. **Trace data flow** — follow data from input to output
+3. **Identify dependencies** — what depends on this code?
+4. **Check test coverage** — what's tested, what's not?
+5. **Find patterns** — what conventions does this codebase use?
+
+### Output Template
+```markdown
+## Code Archaeology Report: [module]
+**Architecture:** [diagram or description]
+**Data Flow:** [input → processing → output]
+**Dependencies:** [what uses this, what this uses]
+**Test Coverage:** [covered / not covered areas]
+**Risk Areas:** [fragile code, missing tests, tight coupling]
+**Recommendation:** [approach for the planned change]
+```
+
+---
+
+## The Linus Principle — Data Structures Over Conditionals
+
+When reviewing code, apply these questions:
+
+1. **"Is this a real problem or made-up?"** — reject over-design
+2. **"Is there a simpler way?"** — always seek the simplest solution
+3. **"Will this break anything?"** — backward compatibility is sacred
+4. **"Are there special cases?"** — special cases = design flaws; fix with better data structures
+5. **"Can you reduce nesting?"** — if >3 levels of indentation, redesign
+
+> "Bad programmers worry about code. Good programmers worry about data structures."
+
+---
+
+## Multi-Perspective Review
+
+For critical features, run parallel reviews from different angles:
+
+| Perspective | Questions |
+|------------|-----------|
+| **Developer** | Is this clean, maintainable, idiomatic? |
+| **Security** | Any OWASP vulnerabilities? Data exposure? |
+| **Performance** | N+1 queries? Memory leaks? Unnecessary re-renders? |
+| **QA** | Edge cases covered? Error paths handled? |
+| **UX** | Is the user experience logical and accessible? |
+| **DevOps** | Will this deploy cleanly? Monitoring in place? |
+
+### Severity Output Format
+
+```
+🔴 CRITICAL — [issue] → Must fix before merge
+🟡 IMPORTANT — [issue] → Should fix before proceeding  
+🟢 SUGGESTION — [issue] → Nice to have, note for later
+```
