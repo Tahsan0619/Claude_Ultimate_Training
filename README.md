@@ -2,7 +2,7 @@
 
 > **Drop this folder into any project. Send one message. Get a full project back.**
 >
-> A portable AI coding instruction set with **8 specialized agents** that work as a team inside VS Code Copilot Agent Mode. One premium request. Full project — designed, coded, tested, secured, polished, and committed.
+> A portable AI coding instruction set with **10 specialized agents** that work as a team inside VS Code Copilot Agent Mode. One premium request. Full project — designed, coded, tested, secured, polished, and committed.
 
 ---
 
@@ -12,7 +12,7 @@ This is two things in one:
 
 1. **A universal instruction set** — 11 skill files + 11 reference docs + a master CLAUDE.md that works in any AI coding environment (VS Code Copilot, Claude Code, Cursor, Windsurf, API). Drop it into any project and Claude/Copilot immediately follows battle-tested engineering practices.
 
-2. **An 8-agent AI coding team** — specialized agents that work together in VS Code Copilot Agent Mode. You describe what you want, Coordinator dispatches the right agents, and every dispatched agent fully completes its work before the session ends. No supervision needed.
+2. **A 10-agent AI coding team** — specialized agents that work together in VS Code Copilot Agent Mode. You describe what you want, Coordinator dispatches the right agents, and every dispatched agent fully completes its work before the session ends. No supervision needed.
 
 **Built from 40+ top AI coding repositories.** Every pattern, framework, and rule in this repo was extracted from real-world production use, not theory.
 
@@ -58,8 +58,10 @@ That's it. One message. Full project.
 | **PromptEngineer** | System prompt quality, agent instructions, prompt frameworks | AI/LLM features |
 | **Verifier** | Full test suite, 6-lens code review (dev, security, perf, QA, UX, a11y), binary PASS/FAIL | After any code changes |
 | **MemoryKeeper** | Updates todo/lessons, git commits, session archive, SESSION COMPLETE report | Always last |
+| **TestRunner** | Validates all agents produce expected outputs using synthetic test cases | After agent edits, Opus upgrades |
+| **AgentAuditor** | Detects conflicts, overlaps, gaps, and context limit risks between agents | After TestRunner, agent changes |
 
-**Coordinator picks the right agents for each request.** A bug fix uses Builder → Verifier → MemoryKeeper. A full app uses all 8. Every dispatched agent must fully complete before the session ends.
+**Coordinator picks the right agents for each request.** A bug fix uses Builder → Verifier → MemoryKeeper. A full app uses all 8 project agents. TestRunner and AgentAuditor are dispatched only for agent team validation. Every dispatched agent must fully complete before the session ends.
 
 See [HOW_TO_USE.md](HOW_TO_USE.md) for the universal prompt template, real examples, and detailed pipeline documentation.
 
@@ -76,7 +78,7 @@ See [HOW_TO_USE.md](HOW_TO_USE.md) for the universal prompt template, real examp
 | Claude API | No | **Yes** | Load CLAUDE.md as system prompt |
 | Claude.ai | No | **Yes** | Paste into project knowledge |
 
-The **agent team** (8 agents working together) only works in **VS Code Copilot Agent Mode** where Copilot loops internally for free after your message.
+The **agent team** (10 agents working together) only works in **VS Code Copilot Agent Mode** where Copilot loops internally for free after your message.
 
 The **instruction set** (CLAUDE.md + skills + docs) works everywhere — it makes any AI coding tool follow better engineering practices regardless of environment.
 
@@ -116,7 +118,7 @@ The **instruction set** (CLAUDE.md + skills + docs) works everywhere — it make
 | [docs/hooks-and-automation.md](docs/hooks-and-automation.md) | Hook lifecycle, codebase maps, quality gates, performance profiling |
 | [docs/memory-and-context.md](docs/memory-and-context.md) | Persistent memory, cross-session context, transcript analysis |
 
-### Agents (8 files) — The Team
+### Agents (10 files) — The Team
 
 | File | Agent |
 |---|---|
@@ -128,6 +130,8 @@ The **instruction set** (CLAUDE.md + skills + docs) works everywhere — it make
 | [agents/prompt-engineer.agent.md](agents/prompt-engineer.agent.md) | PromptEngineer — 27 frameworks, 7 intent categories, quality scoring |
 | [agents/security-auditor.agent.md](agents/security-auditor.agent.md) | SecurityAuditor — full OWASP checklists, agent safety, command blocklist |
 | [agents/uiux-specialist.agent.md](agents/uiux-specialist.agent.md) | UIUXSpecialist — WCAG audit, font pairings, color tokens, pre-delivery checklist |
+| [agents/test-runner.agent.md](agents/test-runner.agent.md) | TestRunner — synthetic test cases per agent, pass/fail validation, fix briefs |
+| [agents/agent-auditor.agent.md](agents/agent-auditor.agent.md) | AgentAuditor — conflict detection, overlap/gap analysis, context limit risk assessment |
 
 ### Tasks (working memory)
 
@@ -146,7 +150,7 @@ ultimate-claude-prompt/
 ├── HOW_TO_USE.md                      ← Universal prompt + agent team guide
 ├── README.md                          ← This file
 │
-├── agents/                            ← 8 agent definition files
+├── agents/                            ← 10 agent definition files
 │   ├── coordinator.agent.md
 │   ├── architect.agent.md
 │   ├── builder.agent.md
@@ -154,7 +158,9 @@ ultimate-claude-prompt/
 │   ├── memorykeeper.agent.md
 │   ├── prompt-engineer.agent.md
 │   ├── security-auditor.agent.md
-│   └── uiux-specialist.agent.md
+│   ├── uiux-specialist.agent.md
+│   ├── test-runner.agent.md
+│   └── agent-auditor.agent.md
 │
 ├── skills/                            ← 11 workflow discipline files
 │   ├── brainstorming.md
@@ -187,7 +193,7 @@ ultimate-claude-prompt/
     └── lessons.md
 ```
 
-**Total: 33 files across 5 directories**
+**Total: 35 files across 5 directories**
 
 ---
 
@@ -254,6 +260,7 @@ Whether you use the agent team or the instruction set standalone, everything fol
 | 11 | **Learn from every session** | Write lessons so you never repeat the same mistake |
 | 12 | **Simplicity first** | Minimal code. No over-engineering. No premature abstractions |
 | 13 | **Never assume** | Verify paths, APIs, variables, state before using them |
+| 14 | **Agent team health** | Validate agents with TestRunner + AgentAuditor after any agent change |
 
 ---
 

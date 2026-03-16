@@ -1,12 +1,12 @@
 # HOW TO USE YOUR AGENT TEAM
 
-**8 agents. One message. Every dispatched agent finishes.**
+**10 agents. One message. Every dispatched agent finishes.**
 
 ---
 
 ## What This Is
 
-This is an AI coding team — 8 specialized agents that work together inside **VS Code Copilot Agent Mode**. You send **one message**, Copilot loops internally for free after that, and the Coordinator dispatches the agents your request needs. Not every request needs all 8 — a bug fix doesn't need UIUXSpecialist designing a color system. But whichever agents ARE dispatched, **every single one must fully complete its work** before the session ends. No agent gets skipped midway. No half-finished jobs. It can take hours. That's fine. You send one message and walk away.
+This is an AI coding team — 10 specialized agents that work together inside **VS Code Copilot Agent Mode**. You send **one message**, Copilot loops internally for free after that, and the Coordinator dispatches the agents your request needs. Not every request needs all 10 — a bug fix doesn't need UIUXSpecialist designing a color system. But whichever agents ARE dispatched, **every single one must fully complete its work** before the session ends. No agent gets skipped midway. No half-finished jobs. It can take hours. That's fine. You send one message and walk away.
 
 ---
 
@@ -21,7 +21,7 @@ This is an AI coding team — 8 specialized agents that work together inside **V
 
 ---
 
-## Your 8 Agents
+## Your 10 Agents
 
 | # | Agent | What It Does |
 |---|---|---|
@@ -32,11 +32,18 @@ This is an AI coding team — 8 specialized agents that work together inside **V
 | 5 | **SecurityAuditor** | Audits every file for OWASP Top 10 vulnerabilities, auth issues, injection risks, credential exposure, agent safety. Writes a severity-rated report. Builder fixes anything critical. |
 | 6 | **PromptEngineer** | Only runs if the project involves AI/LLM features. Writes and audits system prompts, agent instructions, prompt templates. Ensures prompt quality using 27 frameworks. |
 | 7 | **Verifier** | Runs the full test suite. Reviews all code through 6 lenses (developer, security, performance, QA, UX, accessibility). Binary PASS or FAIL — no partial credit. Sends Builder back if anything fails. |
-| 8 | **MemoryKeeper** | Runs last. Updates todo.md and lessons.md. Commits all work to git. Writes the SESSION COMPLETE report. Archives session context for future sessions. |
+| 8 | **MemoryKeeper** | Runs last on project sessions. Updates todo.md and lessons.md. Commits all work to git. Writes the SESSION COMPLETE report. Archives session context for future sessions. |
+| 9 | **TestRunner** | Validates that all agents produce expected outputs using synthetic test cases. Runs after any agent file edit or Opus upgrade. Catches broken agents before they waste a real session. |
+| 10 | **AgentAuditor** | Cross-reads all agent files to detect conflicts, overlaps, gaps, and context limit risks. Runs after TestRunner. Ensures the team works together, not just individually. |
 
 **The full pipeline (for a complete build):**
 ```
 Coordinator → Architect → UIUXSpecialist (design) → Builder → SecurityAuditor → PromptEngineer (if AI) → Verifier → (Builder fix loop if FAIL) → Verifier (re-check) → MemoryKeeper → SESSION COMPLETE
+```
+
+**The validation pipeline (for agent team health):**
+```
+Coordinator → TestRunner → AgentAuditor → MemoryKeeper → SESSION COMPLETE
 ```
 
 Not every request runs the full pipeline. Coordinator picks the right agents for the job. See "Which Agents Run When" below.
@@ -57,8 +64,11 @@ Coordinator decides automatically, but here's what to expect:
 | **UI polish / redesign** | Coordinator → UIUXSpecialist (audit) → Builder (fixes) → Verifier → MemoryKeeper |
 | **AI/LLM feature** | Coordinator → Architect → PromptEngineer → Builder → SecurityAuditor → Verifier → MemoryKeeper |
 | **Writing/improving prompts or agents** | Coordinator → PromptEngineer → MemoryKeeper |
+| **Validate agent team** | Coordinator → TestRunner → AgentAuditor → MemoryKeeper |
 
 **The rule:** Whichever agents Coordinator dispatches, **every one of them must fully complete its workflow and write its handoff note** before the next agent starts. No agent is skipped once dispatched. MemoryKeeper always runs last — no session ends without SESSION COMPLETE.
+
+**Note:** TestRunner and AgentAuditor are only dispatched when validating the agent team itself — not on regular project sessions.
 
 ---
 
@@ -103,6 +113,8 @@ Execute the FULL pipeline:
 5. Do NOT stop until MemoryKeeper prints SESSION COMPLETE
 6. Do NOT ask me any questions — make reasonable assumptions and document them in the session plan
 7. If any agent fails 3 times on the same task, document the blocker in tasks/todo.md and move on — do not loop forever
+
+**For agent team validation, dispatch instead:** @test-runner @agent-auditor @memorykeeper
 
 ===== END =====
 ```
@@ -216,6 +228,41 @@ YOU SEND ONE MESSAGE
 
 ---
 
+## Agent Validation Prompt
+
+Run this after editing any agent file, adding a new agent, or after an Opus model upgrade. This validates that all 10 agents work individually (TestRunner) and as a team (AgentAuditor).
+
+```
+@coordinator
+
+===== PROJECT REQUEST =====
+
+Project: Validate the entire agent team. Run TestRunner against all 10 agents to verify each produces expected outputs. Then run AgentAuditor to detect conflicts, overlaps, gaps, and context limit risks between agents. Fix any issues found, then confirm the team is healthy.
+
+Tech Stack: N/A — this is an agent validation session, not a code build.
+
+Special Requirements: none
+
+Reference Files: All files in agents/ directory
+
+===== EXECUTION INSTRUCTIONS =====
+
+You are the Coordinator. Dispatch these agents in order:
+1. @test-runner — validate all 10 agents produce expected outputs using synthetic test cases
+2. @agent-auditor — cross-read all agent files, detect conflicts/overlaps/gaps, assess context limit risks
+3. @memorykeeper — record results, update lessons.md, commit
+
+Report results in:
+- tasks/agent_test_results.md (TestRunner output)
+- tasks/agent_audit_report.md (AgentAuditor output)
+
+Do not ask questions. Do not stop until MemoryKeeper prints SESSION COMPLETE.
+
+===== END =====
+```
+
+---
+
 ## Cost
 
 **1 premium request per message you send.** That's it.
@@ -245,8 +292,8 @@ Reference Files: none
 
 ===== EXECUTION INSTRUCTIONS =====
 
-You are the Coordinator. You have 8 agents at your disposal:
-@architect @builder @verifier @memorykeeper @prompt-engineer @security-auditor @uiux-specialist
+You are the Coordinator. You have 10 agents at your disposal:
+@architect @builder @verifier @memorykeeper @prompt-engineer @security-auditor @uiux-specialist @test-runner @agent-auditor
 
 Execute the FULL pipeline:
 
@@ -267,6 +314,8 @@ Execute the FULL pipeline:
 7. Do NOT stop until MemoryKeeper prints SESSION COMPLETE
 8. Do NOT ask me any questions — make reasonable assumptions and document them in the session plan
 9. If any agent fails 3 times on the same task, document the blocker in tasks/todo.md and move on — do not loop forever
+
+**For agent team validation, dispatch instead:** @test-runner @agent-auditor @memorykeeper
 
 ===== END =====
 ```
@@ -357,7 +406,7 @@ your-project/
 │   ├── task_plan.md                ← created by Architect
 │   ├── design_system.md            ← created by UIUXSpecialist
 │   └── archive/                    ← past session archives
-├── agents/                         ← the 8 agent definition files
+├── agents/                         ← the 10 agent definition files
 │   ├── coordinator.agent.md
 │   ├── architect.agent.md
 │   ├── builder.agent.md
@@ -365,7 +414,9 @@ your-project/
 │   ├── memorykeeper.agent.md
 │   ├── prompt-engineer.agent.md
 │   ├── security-auditor.agent.md
-│   └── uiux-specialist.agent.md
+│   ├── uiux-specialist.agent.md
+│   ├── test-runner.agent.md
+│   └── agent-auditor.agent.md
 └── src/                            ← your project source code
 ```
 
@@ -376,8 +427,8 @@ your-project/
 **Q: Do I need to send multiple messages to run different agents?**
 No. One message triggers everything. Coordinator decides which agents are needed, dispatches them, and Copilot loops internally for free.
 
-**Q: Does every request use all 8 agents?**
-No. Coordinator picks the agents your request actually needs. A bug fix might only use Builder → Verifier → MemoryKeeper. A full app uses all 8. But whichever agents ARE dispatched, every single one must fully complete its work — no agent gets skipped once it starts.
+**Q: Does every request use all 10 agents?**
+No. Coordinator picks the agents your request actually needs. A bug fix might only use Builder → Verifier → MemoryKeeper. A full app uses all 8 project agents (TestRunner and AgentAuditor are for agent team validation, not regular builds). But whichever agents ARE dispatched, every single one must fully complete its work — no agent gets skipped once it starts.
 
 **Q: Can I force specific agents to run or be skipped?**
 Yes — in the Special Requirements field, you can write things like "Make sure SecurityAuditor runs" or "Skip UIUXSpecialist — this is backend only." Coordinator will respect that.
