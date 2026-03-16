@@ -51,7 +51,22 @@ BAD:  Read entire 500-line file when you need line 42
 GOOD: Read lines 35-55 to get the function you need
 ```
 
-**3. Smart Search**
+**3. Symbol-Driven Reading (Serena Pattern)**
+Instead of reading entire files, navigate by symbol:
+```
+BAD:  Read all of auth.ts (500 lines) to find the login function
+GOOD: Find symbol "login" in auth.ts → read only its body (~30 lines)
+
+BAD:  grep "handlePayment" across all files
+GOOD: Find references to handlePayment → see exact 5 call sites
+```
+Symbol-level navigation saves 50-80% tokens in large codebases:
+- `find_symbol(name)` → locate function/class/variable
+- `find_references(symbol)` → find all usages
+- `overview(file, depth=1)` → structure without bodies
+- Only read function bodies AFTER confirming relevance
+
+**4. Smart Search**
 - Use `grep` with specific patterns (not read entire files)
 - Use glob patterns to narrow file search
 - Use `mgrep` (multi-grep) when available — ~50% fewer tokens
@@ -65,6 +80,41 @@ GOOD: Read lines 35-55 to get the function you need
 - Compact at logical break points (between features, not mid-task)
 - Save session state to file before compacting
 - Use `tasks/todo.md` to preserve progress across compactions
+
+---
+
+## 3-Layer Context Compression
+
+For infinite sessions within a fixed context window:
+
+```
+Layer 1: SUMMARIZE
+  → Compress old conversation messages into summaries
+  → Keep recent 3-5 messages in full detail
+  → Older messages → 1-2 sentence summaries
+
+Layer 2: ARCHIVE
+  → Write summaries to disk (tasks/session-archive.md)
+  → Include: decisions made, files changed, blockers found
+  → This survives context window resets
+
+Layer 3: ON-DEMAND RETRIEVAL
+  → When you need old context, read from archive file
+  → Don't load it all — search for specific topics
+  → Cost: 10x cheaper than re-reading full conversation
+```
+
+### When to Compress
+- After completing a major phase (not mid-task)
+- When context usage exceeds ~150K tokens
+- Before switching to a different area of the codebase
+- Before running `/clear` or `/compact`
+
+### What to Preserve in Full
+- Current task plan and phase status
+- Unsaved decisions and their rationale
+- Active file changes not yet committed
+- Error messages being investigated
 
 ---
 

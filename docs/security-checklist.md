@@ -86,6 +86,42 @@
 
 ---
 
+## Agent Safety Rules (for AI-Assisted Development)
+
+### Defensive Shell Flags
+When running commands in AI agent contexts, use non-interactive flags to prevent hangs:
+```bash
+cp -f source dest        # NOT: cp source dest (may prompt for overwrite)
+rm -f file               # NOT: rm file (may prompt for confirmation)
+mv -f source dest        # NOT: mv source dest
+scp -o BatchMode=yes     # Prevents SSH password prompts
+git merge --no-edit      # Skip editor for merge commits
+```
+
+### Credential Isolation
+- **Never expose secrets to agent tools** — use a credential proxy or env vars
+- Agents should request auth tokens via a secure service, never handle raw credentials
+- API keys in environment variables, not in `.env` files committed to git
+- Container-based agents: mount secrets as read-only volumes, never bake into images
+
+### API Rate-Limit Budgeting
+When agents interact with external APIs:
+```
+1. Check available quota: gh api rate_limit
+2. Budget: 3-5 API calls total per CI wait
+3. Strategy: sleep 10-15 min → check ONCE → sleep → check again
+4. NEVER poll in tight loops — burns quota instantly
+```
+
+### Agent Command Blocklist
+Block or gate these in CI/hooks:
+- `rm -rf /` or any recursive delete on root
+- `git push --force` without explicit user approval
+- `DROP TABLE`, `DELETE FROM` without WHERE clause
+- Any command containing secrets in arguments (visible in process list)
+
+---
+
 ## Secrets Management
 
 ```

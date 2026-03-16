@@ -115,6 +115,105 @@ DONE | DONE_WITH_CONCERNS | NEEDS_CONTEXT | BLOCKED
 
 ---
 
+## Fresh Context Per Agent (Critical Pattern)
+
+> Each spawned agent gets a **clean 200K token window**. This eliminates context rot.
+
+```
+Orchestrator (thin):
+  1. Load minimal context from files
+  2. Spawn Agent A with ONLY what it needs
+  3. Agent A works in clean context → writes results to disk
+  4. Orchestrator reads results from disk
+  5. Spawn Agent B with Agent A's results
+  
+NEVER pass conversation history to subagents.
+NEVER let the orchestrator accumulate work output.
+Agents read from disk → work → write to disk.
+```
+
+### The Thin Orchestrator Principle
+The coordinator NEVER does heavy lifting:
+- Loads state from files (`tasks/task_plan.md`, `tasks/findings.md`)
+- Dispatches agents with tight, focused prompts
+- Collects results from disk artifacts
+- Updates state files
+- Dispatches next agent
+
+If the orchestrator is writing code, something is wrong.
+
+---
+
+## Agent Role Registry
+
+Specialized agents outperform generic ones. Name your agents by purpose:
+
+| Agent | Purpose | Model |
+|-------|---------|-------|
+| **Archaeologist** | Map unfamiliar code before modifying | Haiku/Sonnet |
+| **Architect** | Design systems, make structural decisions | Opus |
+| **Implementer** | Write code following a spec | Sonnet |
+| **Debugger** | Systematic root cause analysis | Sonnet/Opus |
+| **Reviewer** | Code quality + spec compliance | Sonnet |
+| **Security Auditor** | OWASP, vulnerability scanning | Opus |
+| **Researcher** | Explore docs, APIs, patterns | Haiku |
+| **Test Writer** | Write comprehensive test suites | Sonnet |
+| **Optimizer** | Performance profiling + fixes | Sonnet |
+| **Doc Writer** | Documentation generation | Haiku |
+
+Each agent has different system prompts, risk tolerance, and model requirements.
+
+---
+
+## Phase Decomposition Pattern
+
+Break complex tasks into sequential agent phases:
+
+```
+Phase 1: Archaeologist → map the codebase
+   → outputs: architecture.md, dependency-graph.md
+
+Phase 2: Architect → design the solution
+   → reads: architecture.md
+   → outputs: design-spec.md
+
+Phase 3: Implementer(s) → build it (can parallelize per module)
+   → reads: design-spec.md
+   → outputs: code + tests
+
+Phase 4: Reviewer → verify quality
+   → reads: design-spec.md + code changes
+   → outputs: review-report.md
+
+Phase 5: Security Auditor → check for vulnerabilities
+   → reads: code changes
+   → outputs: security-report.md
+```
+
+Each phase gets a dedicated agent. Output flows to next phase via files.
+
+---
+
+## Async Mailbox Coordination
+
+For multi-agent teams that need to communicate:
+
+```
+tasks/mailbox.jsonl  (append-only, one JSON object per line)
+
+{"from": "researcher", "to": "planner", "type": "finding", "data": {...}}
+{"from": "planner", "to": "implementer", "type": "task", "data": {...}}
+{"from": "implementer", "to": "reviewer", "type": "ready", "data": {...}}
+```
+
+Rules:
+- **Append-only** — never modify existing entries
+- **One message per line** — easy to parse, grep, filter
+- **Typed messages** — finding, task, ready, blocked, done
+- **No imperative message passing** — just write to file, others read
+
+---
+
 ## Model Routing by Task Complexity
 
 | Complexity | Model | Use For |

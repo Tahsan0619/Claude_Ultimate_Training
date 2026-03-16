@@ -193,6 +193,7 @@ your-project/
 ├── skills/                      ← Workflow disciplines
 │   ├── brainstorming.md
 │   ├── writing-plans.md
+│   ├── task-planning.md         ← NEW: File-based persistent planning
 │   ├── test-driven-development.md
 │   ├── debugging.md
 │   ├── verification.md
@@ -210,7 +211,8 @@ your-project/
 │   ├── prompt-engineering.md
 │   ├── token-optimization.md
 │   ├── continuous-learning.md
-│   └── environment-setup.md     ← This file
+│   ├── environment-setup.md     ← This file
+│   └── hooks-and-automation.md  ← NEW: Hook lifecycle, quality gates
 ├── tasks/                       ← Living tracking
 │   ├── todo.md
 │   └── lessons.md

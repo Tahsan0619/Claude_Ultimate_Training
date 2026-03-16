@@ -7,19 +7,24 @@
 
 ## What This Is
 
-A synthesized, battle-tested collection of engineering best practices extracted from **22 top Claude repositories**:
+A synthesized, battle-tested collection of engineering best practices extracted from **40 top Claude & AI coding repositories**:
 
 **Core Workflow & Skills:**
 - **awesome-claude-code** — 300+ curated Claude Code resources and real CLAUDE.md examples
 - **superpowers** — 14 disciplined development skills (TDD, debugging, planning, reviews)
 - **everything-claude-code** — 65+ skills, 16 agents, eval-driven development, iterative retrieval
 - **skills (Anthropic official)** — SKILL.md format, Anthropic-endorsed patterns
+- **antigravity-awesome-skills** — 1,262+ universal skills across 90+ categories
 
 **Agent & Orchestration:**
 - **awesome-claude-agents** — 24 specialized agents across 4 categories
 - **awesome-claude-code-subagents** — 127+ subagent implementations
+- **agents (Anthropic plugins)** — 112 agents, 146 skills, 79 tools, 16 orchestrators
 - **claude-squad** — Multi-instance parallel orchestration via git worktrees
 - **ruflo** — Swarm orchestration with 3-tier routing
+- **get-shit-done** — 15-agent orchestra, fresh-context-per-agent, thin orchestrator pattern
+- **oh-my-openagent** — 11 specialized agents, 46 lifecycle hooks, 3-tier MCP
+- **opcode** — Sub-agent phase decomposition, JSON agent configs
 
 **Prompt Engineering:**
 - **claude-skill-prompt-architect** — 27 research-backed frameworks, 7 intent categories
@@ -34,9 +39,24 @@ A synthesized, battle-tested collection of engineering best practices extracted 
 **Memory & Context:**
 - **claude-mem** — Persistent memory, cross-session context, transcript analysis
 - **claude-code-router** — Smart model routing and cost optimization
+- **planning-with-files** — File-based persistent planning for 16+ IDEs, session recovery
+- **learn-claude-code** — 3-layer context compression, async mailbox coordination
+
+**Quality & Safety:**
+- **claudekit** — 195+ bash security patterns, hook performance profiling
+- **beads** — "Landing the Plane" mandatory completion workflow, defensive agent patterns
+- **claude-task-master** — AI complexity analysis, Nyquist verification auditor
+- **AionUi** — Enterprise quality gates, i18n-first, AI signature prohibition
+
+**Infrastructure & Tools:**
+- **claude-code-templates** — 600+ component catalog, validation workflows
+- **claude-starter-kit** — Symbol-driven reading, Serena LSP patterns
+- **nanoclaw** — Container-based agent isolation, credential proxy
+- **serena** — Symbol-level semantic code tools via LSP
 
 **Design & UX:**
 - **ui-ux-pro-max** — 67 UI styles, 161 color palettes, 57 font pairings, 99 UX guidelines
+- **cherry-studio** — 300+ pre-configured assistants, 17+ languages
 
 ---
 
@@ -70,35 +90,37 @@ ultimate-claude-prompt/
 ├── CLAUDE.md                          ← START HERE — master instructions
 ├── README.md                          ← This file (usage guide)
 │
-├── skills/                            ← Workflow skills (10 files)
+├── skills/                            ← Workflow skills (11 files)
 │   ├── brainstorming.md               ← Design before building
 │   ├── writing-plans.md               ← Break work into executable steps
+│   ├── task-planning.md               ← File-based persistent planning + session recovery
 │   ├── test-driven-development.md     ← Red-Green-Refactor discipline
 │   ├── debugging.md                   ← Systematic root cause + iterative retrieval
 │   ├── verification.md               ← Prove it works + eval-driven development
-│   ├── agent-orchestration.md         ← Multi-agent coordination & model routing
+│   ├── agent-orchestration.md         ← Multi-agent coordination, mailboxes, model routing
 │   ├── subagent-development.md        ← Dispatch, review, iterate on subagent work
 │   ├── code-review.md                ← Code archaeology + multi-perspective review
 │   ├── prompt-architecture.md         ← 27 frameworks for crafting prompts
 │   └── git-workflow.md               ← Branches, commits, merging
 │
-├── docs/                              ← Reference guides (9 files)
+├── docs/                              ← Reference guides (10 files)
 │   ├── coding-standards.md            ← Architecture, naming, style, testing
 │   ├── ui-ux-guidelines.md            ← Typography, colors, components, responsive
 │   ├── accessibility.md              ← WCAG, keyboard nav, screen readers, ARIA
-│   ├── security-checklist.md          ← OWASP Top 10, secrets, validation
+│   ├── security-checklist.md          ← OWASP Top 10, agent safety, defensive patterns
 │   ├── performance.md                ← Web vitals, loading, runtime optimization
 │   ├── prompt-engineering.md          ← XML structuring, thinking modes, anti-sycophancy
-│   ├── token-optimization.md          ← Model routing, context management, cost control
-│   ├── continuous-learning.md         ← Session memory, lessons, cross-session knowledge
-│   └── environment-setup.md           ← Setup for Claude Code, Cursor, VS Code, API
+│   ├── token-optimization.md          ← Model routing, symbol-driven reading, context compression
+│   ├── continuous-learning.md         ← Session memory, file-based working memory, 2-action rule
+│   ├── environment-setup.md           ← Setup for Claude Code, Cursor, VS Code, Windsurf, API
+│   └── hooks-and-automation.md         ← Hook lifecycle tiers, codebase maps, quality gates
 │
 └── tasks/                             ← Living project tracking
     ├── todo.md                        ← Current task list (updated per session)
     └── lessons.md                     ← Lessons learned log (grows over time)
 ```
 
-**Total: 22 files across 4 directories**
+**Total: 24 files across 4 directories**
 
 ---
 
@@ -106,19 +128,19 @@ ultimate-claude-prompt/
 
 ```
 SESSION START
-  → Read lessons + todo
+  → Read lessons + todo + task_plan (if exists)
   → Detect project stack automatically
   → Check for applicable skills
   ↓
 NEW FEATURE                    BUG FIX                    REFACTOR
   → Brainstorm                   → Debug (systematic)       → Plan
   → Design spec                  → Root cause analysis      → Test existing behavior
-  → Plan                         → Iterative retrieval      → Change code
+  → Plan (file-based if complex) → Iterative retrieval      → Change code
   → TDD (red-green-refactor)     → Failing test             → Verify tests pass
   → Verify (+ evals)             → Fix                      → Verify (+ evals)
   → Multi-perspective review     → Verify                   → Review
   ↓                              ↓                           ↓
-DONE → Update todo + lessons → Commit → Push
+DONE → Update todo + lessons → Commit → LAND THE PLANE → Push
 ```
 
 ---
@@ -130,11 +152,14 @@ DONE → Update todo + lessons → Commit → Push
 3. **Verify before you claim** — run the tests, read the output, then say "done"
 4. **Debug systematically** — no guessing, no "quick fixes"
 5. **Use the right model** — Haiku for simple tasks, Sonnet for most work, Opus for deep reasoning
-6. **Batch operations** — 1 message = all related operations (don't waste context)
-7. **Design for users** — accessibility and UX are not optional
-8. **Secure by default** — validate inputs, handle errors, protect data
-9. **Learn from every session** — write lessons so you never repeat mistakes
-10. **Works everywhere** — portable across Claude Code, Cursor, VS Code, Windsurf, API
+6. **Fresh context per agent** — each subagent gets a clean window, no conversation rot
+7. **File-based memory** — use the filesystem as persistent working memory
+8. **Batch operations** — 1 message = all related operations (don't waste context)
+9. **Land the plane** — every session ends with a mandatory completion checklist
+10. **Design for users** — accessibility and UX are not optional
+11. **Secure by default** — validate inputs, handle errors, protect data
+12. **Learn from every session** — write lessons so you never repeat mistakes
+13. **Works everywhere** — portable across Claude Code, Cursor, VS Code, Windsurf, API
 
 ---
 

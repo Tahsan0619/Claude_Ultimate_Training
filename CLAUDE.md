@@ -47,8 +47,11 @@
 - ALWAYS read a file before editing it — never edit blind
 - NEVER commit secrets, credentials, or .env files
 - NEVER use `console.log` / `print` in production code (remove before commit)
+- NEVER add AI attribution signatures to commits, code, or PRs
 - Implement changes — don't just suggest them
 - If uncertain, investigate and deduce — don't ask and wait
+- Use defensive shell flags: `cp -f`, `rm -f`, `mv -f` — prevent interactive prompts that hang agents
+- Route all logging through a centralized service (never raw console output in production)
 
 ---
 
@@ -71,16 +74,20 @@
 ### Phase 1: RESEARCH (Explore → Understand → Identify)
 - Read related files, docs, tests, recent commits (`git log --oneline -20`)
 - Auto-detect stack and identify existing patterns
+- Prefer symbol-level navigation over full-file reads (find functions, not read all)
 - Invoke `skills/brainstorming.md` for creative/design work
+- **2-Action Rule:** After every 2 search/read operations → save key findings to `tasks/findings.md`
 - Ask clarifying questions (one focused batch, not drip-feed)
 - Use `think` / `think hard` / `ultrathink` for complex reasoning
 
 ### Phase 2: PLAN (Design → Break Down → Specify)
 - Enter plan mode for any task with 3+ steps
 - Write the plan to `tasks/todo.md` before implementing
+- For complex tasks: use file-based planning (`tasks/task_plan.md` + `tasks/findings.md` + `tasks/progress.md`)
 - Break into bite-sized steps (2-5 min each, one action per step)
 - Each step: files to touch, exact changes, verification command
 - See `skills/writing-plans.md` for the full planning discipline
+- See `skills/task-planning.md` for file-based persistent planning
 
 ### Phase 3: EXECUTE (TDD → Implement → Commit)
 - Follow the plan step-by-step — no freestyling
@@ -100,15 +107,29 @@
 - Format: `[date] | what went wrong | rule to prevent it`
 - Review lessons at every session start
 
+### LANDING THE PLANE (Mandatory Session Completion)
+> Before ending ANY session or pushing to remote, complete ALL steps:
+
+1. File issues/TODOs for remaining work
+2. Run quality gates: lint → test → typecheck
+3. Update `tasks/todo.md` with current status
+4. Update `tasks/lessons.md` with any insights gained
+5. `git pull --rebase && git push`
+6. Verify `git status` shows clean working tree
+7. Leave a breadcrumb note for the next session
+
 ---
 
 ## AGENT & SUBAGENT STRATEGY
 
-- Use subagents to keep main context clean — one focused task per agent
+- **Fresh context per agent** — each spawned agent gets a clean context window (no conversation rot)
+- **Thin orchestrator** — the coordinator NEVER does heavy lifting; it loads context → dispatches → collects results
 - Provide FULL context in every dispatch (paste the content, don't say "go read X")
 - Route by complexity: Haiku for simple tasks, Sonnet for implementation, Opus for architecture/security
+- Model fallback chain: Opus → Sonnet → Haiku (auto-downgrade if top model unavailable)
 - Two-stage review: **spec compliance** FIRST, then **code quality**
-- Dispatch parallel agents for independent failures (3+ independent problems)
+- Dispatch parallel agents for independent work (max 2 simultaneous)
+- Agents coordinate via file-based state (markdown + JSON), NOT conversation history
 - See `skills/agent-orchestration.md` for the full multi-agent playbook
 - See `skills/subagent-development.md` for dispatch templates
 
@@ -153,6 +174,7 @@
 | `skills/subagent-development.md` | When dispatching work to subagents |
 | `skills/code-review.md` | After completing a feature or PR |
 | `skills/prompt-architecture.md` | Crafting high-quality prompts with frameworks |
+| `skills/task-planning.md` | File-based persistent planning for complex work |
 | `skills/git-workflow.md` | Branch management and merging |
 
 ### Docs (Reference Guides)
@@ -167,6 +189,7 @@
 | `docs/token-optimization.md` | Cost reduction, model routing, context management |
 | `docs/continuous-learning.md` | Session continuity, instincts, cross-session memory |
 | `docs/environment-setup.md` | Setting up in Claude Code, Cursor, VS Code, API, etc. |
+| `docs/hooks-and-automation.md` | Hook lifecycle, codebase maps, performance profiling |
 
 ---
 

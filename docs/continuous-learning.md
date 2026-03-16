@@ -115,6 +115,38 @@ git show HEAD
 
 ---
 
+## File-Based Working Memory
+
+For complex tasks, use the filesystem as persistent memory (survives context resets):
+
+### Three-File System
+```
+tasks/task_plan.md  → Phases with status (pending/in_progress/complete)
+tasks/findings.md   → Research discoveries + technical decisions with rationale
+tasks/progress.md   → Session log + actions taken + lessons
+```
+
+See `skills/task-planning.md` for the full discipline.
+
+### The 2-Action Rule
+> After every 2 search/read/browse operations → SAVE key findings to `tasks/findings.md`
+
+This prevents knowledge loss when:
+- Context window fills up
+- You run `/clear` or `/compact`
+- Session ends unexpectedly
+- You switch to a different area of the codebase
+
+### Automatic Session Recovery
+When resuming work on an existing task:
+1. Check `tasks/task_plan.md` → find latest in_progress phase
+2. Read `tasks/progress.md` → see last session's final state
+3. Read `tasks/findings.md` → load all previous research (don't re-research!)
+4. Check `git log --oneline -10` → see committed changes
+5. Resume from exact point where last session ended
+
+---
+
 ## Session State File (For Context Compaction)
 
 Before compacting or ending a complex session, save state:

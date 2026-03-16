@@ -88,3 +88,40 @@ Before writing the plan, ask:
 - Check: are tasks in dependency order? (no step references something not yet built)
 - Save to `docs/plans/YYYY-MM-DD-<feature-name>.md`
 - Begin execution with `test-driven-development.md` discipline
+
+---
+
+## Task Complexity Assessment
+
+Before writing a plan, assess complexity (1-10 scale):
+
+| Score | Complexity | Recommended Approach |
+|-------|-----------|---------------------|
+| 1-3 | Simple | `tasks/todo.md` checklist, no formal plan |
+| 4-6 | Medium | This planning skill, 2-4 phases |
+| 7-8 | Complex | File-based planning (`skills/task-planning.md`), subagent decomposition |
+| 9-10 | Very Complex | Architecture review first, then plan, then decompose to sub-plans |
+
+### Factors That Increase Complexity
+- **Files to modify:** 5+ = complex, 10+ = very complex
+- **Cross-module dependencies:** changes in module A affect module B
+- **Unfamiliar codebase:** first time touching this area
+- **Security implications:** auth, payments, PII handling
+- **Multiple integration points:** APIs, databases, queues, external services
+- **State management complexity:** shared mutable state, race conditions
+
+### Recommended Subtask Count
+| Complexity | Subtasks |
+|-----------|----------|
+| 1-3 | 1-3 tasks, inline |
+| 4-6 | 4-8 tasks, formal plan |
+| 7-8 | 8-15 tasks, file-based, subagents |
+| 9-10 | 15+ tasks across sub-plans |
+
+### Verification Density (Nyquist Principle)
+Test coverage per phase must match estimated requirements:
+- **Critical phases** (auth, payments): 1 verification per step
+- **Standard phases** (CRUD, UI): 1 verification per 2-3 steps
+- **Low-risk phases** (docs, formatting): 1 verification at phase end
+
+If test coverage is below required density, the plan has verification gaps.
