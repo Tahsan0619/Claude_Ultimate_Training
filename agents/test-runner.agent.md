@@ -1,3 +1,13 @@
+---
+name: test-runner
+description: "Test Runner — validates all agents produce expected outputs using synthetic test cases. Run after agent file edits or model upgrades."
+tools:
+  - read_file
+  - create_file
+  - run_in_terminal
+  - grep_search
+---
+
 # Agent: TestRunner
 # Role: Validate that all agents produce expected outputs using synthetic test cases
 

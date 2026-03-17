@@ -2,6 +2,8 @@
 
 **10 agents. One message. Every dispatched agent finishes.**
 
+> **Just want a quick prompt for a specific task?** Skip this file and go to [QUICK_START.md](QUICK_START.md) — it has ready-to-paste prompts for bug fixes, security audits, UI reviews, and more. Come back here for the full reference.
+
 ---
 
 ## What This Is
@@ -390,12 +392,15 @@ Reference Files: See .env.example for the OPENAI_API_KEY variable.
 
 ## Folder Structure
 
-Drop this entire folder into your project root. The agents expect this layout:
+Drop the contents of this folder into your project root (not as a subfolder). The agents expect this layout:
 
 ```
 your-project/
+├── .github/
+│   └── copilot-instructions.md  ← Copilot reads this automatically to discover agents
 ├── CLAUDE.md                       ← master instructions (agents read this first)
 ├── HOW_TO_USE.md                   ← this file (for you, the human)
+├── QUICK_START.md                  ← pick-your-use-case menu with ready prompts
 ├── README.md                       ← project readme
 ├── skills/                         ← 11 skill files (workflow disciplines)
 ├── docs/                           ← 11 doc files (reference standards)

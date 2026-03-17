@@ -20,29 +20,55 @@ This is two things in one:
 
 ## Quick Start
 
-### Step 1 — Clone or download this repo into your project
+### Step 1 — Copy the contents INTO your project root
+
+**Don't nest the folder.** Copy the files so they sit at your project root:
 
 ```
 your-project/
-├── ultimate-claude-prompt/    ← drop this entire folder here
-│   ├── CLAUDE.md
-│   ├── HOW_TO_USE.md
-│   ├── skills/
-│   ├── docs/
-│   ├── tasks/
-│   └── agents/
-├── src/                       ← your code
-├── package.json               ← your project
+├── .github/
+│   └── copilot-instructions.md   ← Copilot reads this automatically
+├── agents/                        ← Copilot discovers @coordinator, @builder, etc.
+│   ├── coordinator.agent.md
+│   ├── builder.agent.md
+│   └── ... (10 agent files)
+├── skills/                        ← 11 workflow disciplines
+├── docs/                          ← 11 reference standards
+├── tasks/                         ← working memory (agents read/write here)
+├── CLAUDE.md                      ← master instructions
+├── src/                           ← your existing code
+├── package.json                   ← your project
 └── ...
 ```
 
-### Step 2 — Open VS Code, open Copilot Chat, select Agent Mode
+> **Why at project root?** VS Code Copilot auto-discovers `.github/copilot-instructions.md` and `agents/*.agent.md` files from your workspace root. If they're nested inside a subfolder, Copilot can't find them and `@coordinator` won't work.
 
-### Step 3 — Paste the universal prompt from [HOW_TO_USE.md](HOW_TO_USE.md), fill in the 4 blanks, press Enter
+### Step 2 — Open VS Code → Copilot Chat → Agent Mode
+
+### Step 3 — Pick your use case
+
+**Want the full pipeline?** Paste the universal prompt from [HOW_TO_USE.md](HOW_TO_USE.md).
+
+**Want something specific?** Use [QUICK_START.md](QUICK_START.md) — it has ready-to-paste prompts for every scenario:
+
+| I want to... | Go to |
+|---|---|
+| Fix a bug | [QUICK_START.md](QUICK_START.md) — Bug Fix |
+| Security audit only | [QUICK_START.md](QUICK_START.md) — Security Audit |
+| Security audit + auto-fix | [QUICK_START.md](QUICK_START.md) — Security Audit + Fix |
+| UI/UX review only | [QUICK_START.md](QUICK_START.md) — UI/UX Review |
+| Add a backend feature | [QUICK_START.md](QUICK_START.md) — Backend Feature |
+| Add a feature with UI | [QUICK_START.md](QUICK_START.md) — Feature with UI |
+| Build a full app from scratch | [QUICK_START.md](QUICK_START.md) — Full App |
+| Add an AI/LLM feature | [QUICK_START.md](QUICK_START.md) — AI Feature |
+| Run tests + code review | [QUICK_START.md](QUICK_START.md) — Quality Check |
+| Refactor existing code | [QUICK_START.md](QUICK_START.md) — Refactor |
+| Write/improve AI prompts | [QUICK_START.md](QUICK_START.md) — Prompt Engineering |
+| Mix and match agents | [QUICK_START.md](QUICK_START.md) — Custom Pipeline |
 
 ### Step 4 — Wait for SESSION COMPLETE
 
-That's it. One message. Full project.
+That's it. Copy a prompt, fill in the blanks, send it.
 
 ---
 
@@ -146,8 +172,11 @@ The **instruction set** (CLAUDE.md + skills + docs) works everywhere — it make
 
 ```
 ultimate-claude-prompt/
+├── .github/
+│   └── copilot-instructions.md        ← VS Code Copilot reads this automatically
 ├── CLAUDE.md                          ← Master instructions — read first
 ├── HOW_TO_USE.md                      ← Universal prompt + agent team guide
+├── QUICK_START.md                     ← Pick-your-use-case menu with ready prompts
 ├── README.md                          ← This file
 │
 ├── agents/                            ← 10 agent definition files
@@ -193,7 +222,7 @@ ultimate-claude-prompt/
     └── lessons.md
 ```
 
-**Total: 35 files across 5 directories**
+**Total: 37 files across 6 directories**
 
 ---
 

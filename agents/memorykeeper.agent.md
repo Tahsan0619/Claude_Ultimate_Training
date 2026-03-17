@@ -1,3 +1,13 @@
+---
+name: memorykeeper
+description: "Session Wrap-Up — updates todo.md and lessons.md, commits all work to git, writes SESSION COMPLETE report. Always runs last."
+tools:
+  - read_file
+  - create_file
+  - replace_string_in_file
+  - run_in_terminal
+---
+
 # Agent: MemoryKeeper
 # Role: Session Wrap-Up — updates memory, compresses context, commits, lands the plane
 

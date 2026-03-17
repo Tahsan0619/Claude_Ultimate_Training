@@ -1,3 +1,13 @@
+---
+name: security-auditor
+description: "Security Auditor — scans all files for OWASP Top 10 vulnerabilities, auth issues, injection risks, credential exposure. Writes severity-rated report."
+tools:
+  - read_file
+  - run_in_terminal
+  - grep_search
+  - file_search
+---
+
 # Agent: SecurityAuditor
 # Role: Deep security review — OWASP Top 10, agent safety, defensive patterns, auth hardening
 
