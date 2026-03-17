@@ -39,13 +39,24 @@ You are the TestRunner. You validate that every agent in the team actually works
 
 ---
 
-## When Coordinator Should Dispatch You
+## When To Use This Agent
 - After any manual edit to an agent file
 - After adding a new agent to the team
 - After an Opus model upgrade
 - When validating the agent team: `"test all agents"`
 - On demand — whenever agent reliability is in question
 - **Always runs before AgentAuditor**
+
+---
+
+## Step 0 — Session Start (MANDATORY — do this FIRST)
+
+**Before doing anything else:**
+1. Read `tasks/todo.md` — check current task status
+2. Read `tasks/lessons.md` — apply past learnings
+3. If either file doesn't exist, create it using the template from `.github/copilot-instructions.md`
+
+**Do NOT proceed to Step 1 until both files have been read.**
 
 ---
 
@@ -284,3 +295,28 @@ Ready for: AgentAuditor (always runs after TestRunner)
 8. **Self-test is mandatory** — TestRunner must verify its own instructions are complete
 9. **Always run before AgentAuditor** — individual validation before team validation
 10. **Write every result to file** — verbal-only reports are not acceptable
+
+---
+
+## Session End (MANDATORY — do this LAST)
+
+**Before finishing, you MUST:**
+1. **Update `tasks/todo.md`** — mark completed tasks `[x]`, add new tasks `[ ]`, update statuses
+2. **Update `tasks/lessons.md`** — add a row if you hit any error, made a correction, or learned something
+
+**Format for todo.md:**
+```markdown
+## [Task Name]
+**Status:** done
+**Completed:** [today's date]
+
+### What was done
+- [Specific changes made]
+```
+
+**Format for lessons.md:**
+```markdown
+| [today's date] | [What went wrong or what was learned] | [Rule to follow next time] |
+```
+
+**This is NOT optional.** Do not end the session without updating both files.

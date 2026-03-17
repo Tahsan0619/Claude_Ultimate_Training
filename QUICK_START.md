@@ -45,13 +45,13 @@ Tech Stack: auto-detect
 Special Requirements: none
 Reference Files: [Files where the bug might be, or "none"]
 ===== EXECUTION INSTRUCTIONS =====
-You are the Coordinator. Dispatch: @builder → @verifier → @memorykeeper
-Bug fix pipeline only. Do NOT stop until SESSION COMPLETE.
+Execute phases: BUILD → VERIFY → MEMORY
+Bug fix only. Do NOT stop until SESSION COMPLETE.
 ===== END =====
 ```
 
-**Agents used:** Coordinator → Builder → Verifier → MemoryKeeper
-**What happens:** Builder finds and fixes the bug using TDD, Verifier confirms all tests pass, MemoryKeeper commits.
+**Phases:** Build (find & fix with TDD) → Verify (run tests) → Memory (update tasks, commit)
+**What happens:** Coordinator finds and fixes the bug using TDD, confirms all tests pass, updates todo.md + lessons.md, and commits.
 
 ---
 
@@ -66,14 +66,14 @@ Tech Stack: auto-detect
 Special Requirements: Security audit only — no new features, no refactoring.
 Reference Files: Scan all files in src/ (or your source directory)
 ===== EXECUTION INSTRUCTIONS =====
-You are the Coordinator. Dispatch: @security-auditor → @memorykeeper
-Security audit pipeline only. Do NOT stop until SESSION COMPLETE.
+Execute phases: SECURITY → MEMORY
+Security audit only. Do NOT stop until SESSION COMPLETE.
 Write the report to tasks/security_audit_report.md.
 ===== END =====
 ```
 
-**Agents used:** Coordinator → SecurityAuditor → MemoryKeeper
-**What happens:** SecurityAuditor scans every file against OWASP Top 10, writes a severity-rated report, MemoryKeeper commits.
+**Phases:** Security (OWASP Top 10 scan) → Memory (update tasks, commit)
+**What happens:** Coordinator scans every file against OWASP Top 10, writes a severity-rated report, updates todo.md + lessons.md, and commits.
 
 ---
 
@@ -88,12 +88,12 @@ Tech Stack: auto-detect
 Special Requirements: Fix critical/high issues. Log medium/low issues in tasks/todo.md for later.
 Reference Files: Scan all files in src/
 ===== EXECUTION INSTRUCTIONS =====
-You are the Coordinator. Dispatch: @security-auditor → @builder → @verifier → @memorykeeper
-Audit → Fix → Verify pipeline. Do NOT stop until SESSION COMPLETE.
+Execute phases: SECURITY → BUILD → VERIFY → MEMORY
+Audit → Fix → Verify. Do NOT stop until SESSION COMPLETE.
 ===== END =====
 ```
 
-**Agents used:** Coordinator → SecurityAuditor → Builder (fixes) → Verifier → MemoryKeeper
+**Phases:** Security (audit) → Build (fix issues) → Verify (test) → Memory (commit)
 
 ---
 
@@ -108,13 +108,13 @@ Tech Stack: auto-detect
 Special Requirements: Audit only — no code changes.
 Reference Files: [Point to your UI components folder, or "none"]
 ===== EXECUTION INSTRUCTIONS =====
-You are the Coordinator. Dispatch: @uiux-specialist → @memorykeeper
-UI/UX audit pipeline only. Do NOT stop until SESSION COMPLETE.
+Execute phases: DESIGN → MEMORY
+UI/UX audit only. Do NOT stop until SESSION COMPLETE.
 Write the report to tasks/uiux_audit_report.md.
 ===== END =====
 ```
 
-**Agents used:** Coordinator → UIUXSpecialist → MemoryKeeper
+**Phases:** Design (UI/UX audit + WCAG check) → Memory (commit)
 
 ---
 
@@ -129,12 +129,12 @@ Tech Stack: auto-detect
 Special Requirements: Fix all issues found. Ensure WCAG AA compliance.
 Reference Files: [Point to your UI components folder, or "none"]
 ===== EXECUTION INSTRUCTIONS =====
-You are the Coordinator. Dispatch: @uiux-specialist → @builder → @verifier → @memorykeeper
-Audit → Fix → Verify pipeline. Do NOT stop until SESSION COMPLETE.
+Execute phases: DESIGN → BUILD → VERIFY → MEMORY
+Audit → Fix → Verify. Do NOT stop until SESSION COMPLETE.
 ===== END =====
 ```
 
-**Agents used:** Coordinator → UIUXSpecialist → Builder (fixes) → Verifier → MemoryKeeper
+**Phases:** Design (UI/UX audit) → Build (fix issues) → Verify (test) → Memory (commit)
 
 ---
 
@@ -149,12 +149,12 @@ Tech Stack: auto-detect
 Special Requirements: Backend only — no frontend changes needed.
 Reference Files: [Relevant files, or "none"]
 ===== EXECUTION INSTRUCTIONS =====
-You are the Coordinator. Dispatch: @architect → @builder → @security-auditor → @verifier → @memorykeeper
-Backend feature pipeline. Do NOT stop until SESSION COMPLETE.
+Execute phases: DESIGN → BUILD → SECURITY → VERIFY → MEMORY
+Backend feature. Do NOT stop until SESSION COMPLETE.
 ===== END =====
 ```
 
-**Agents used:** Coordinator → Architect → Builder → SecurityAuditor → Verifier → MemoryKeeper
+**Phases:** Design (plan) → Build (TDD) → Security (audit) → Verify (test) → Memory (commit)
 
 ---
 
@@ -169,12 +169,12 @@ Tech Stack: auto-detect
 Special Requirements: [Any design requirements — dark mode, responsive, etc. Or "none"]
 Reference Files: [Mockups, wireframes, existing components, or "none"]
 ===== EXECUTION INSTRUCTIONS =====
-You are the Coordinator. Dispatch: @architect → @uiux-specialist → @builder → @security-auditor → @verifier → @memorykeeper
-Full feature pipeline with UI. Do NOT stop until SESSION COMPLETE.
+Execute ALL phases: DESIGN → BUILD → SECURITY → VERIFY → MEMORY
+Full feature with UI. Do NOT stop until SESSION COMPLETE.
 ===== END =====
 ```
 
-**Agents used:** Coordinator → Architect → UIUXSpecialist → Builder → SecurityAuditor → Verifier → MemoryKeeper
+**Phases:** Design (architecture + UI spec) → Build (TDD) → Security (audit) → Verify (test) → Memory (commit)
 
 ---
 
@@ -189,13 +189,12 @@ Tech Stack: [Your stack, e.g. "Next.js 14, TypeScript, Tailwind CSS, Prisma, Pos
 Special Requirements: [Auth? Dark mode? AI features? Or "none"]
 Reference Files: [Mockups, specs, or "none"]
 ===== EXECUTION INSTRUCTIONS =====
-You are the Coordinator. You have all agents at your disposal:
-@architect @builder @verifier @memorykeeper @prompt-engineer @security-auditor @uiux-specialist
-Execute the FULL pipeline. Do NOT stop until SESSION COMPLETE.
+Execute ALL phases: DESIGN → BUILD → SECURITY → VERIFY → MEMORY
+Full build from scratch. Do NOT stop until SESSION COMPLETE.
 ===== END =====
 ```
 
-**Agents used:** ALL project agents in sequence.
+**Phases:** ALL — Design (full architecture + UI system) → Build (TDD) → Security (OWASP audit) → Verify (full test suite) → Memory (commit)
 
 ---
 
@@ -207,15 +206,15 @@ Execute the FULL pipeline. Do NOT stop until SESSION COMPLETE.
 ===== PROJECT REQUEST =====
 Project: [Describe the AI feature — what model, what it does, user interaction]
 Tech Stack: auto-detect
-Special Requirements: System prompts need review by PromptEngineer. [Other requirements]
+Special Requirements: Review all system prompts for quality. [Other requirements]
 Reference Files: [Existing prompt files, API files, or "none"]
 ===== EXECUTION INSTRUCTIONS =====
-You are the Coordinator. Dispatch: @architect → @prompt-engineer → @builder → @security-auditor → @verifier → @memorykeeper
-AI feature pipeline. Do NOT stop until SESSION COMPLETE.
+Execute phases: DESIGN → BUILD → SECURITY → VERIFY → MEMORY
+AI feature with prompt review. Do NOT stop until SESSION COMPLETE.
 ===== END =====
 ```
 
-**Agents used:** Coordinator → Architect → PromptEngineer → Builder → SecurityAuditor → Verifier → MemoryKeeper
+**Phases:** Design (architecture + prompt review) → Build (TDD) → Security (audit) → Verify (test) → Memory (commit)
 
 ---
 
@@ -230,12 +229,12 @@ Tech Stack: auto-detect
 Special Requirements: Review only — fix nothing unless tests are broken.
 Reference Files: none
 ===== EXECUTION INSTRUCTIONS =====
-You are the Coordinator. Dispatch: @verifier → @memorykeeper
-Quality check pipeline only. Do NOT stop until SESSION COMPLETE.
+Execute phases: VERIFY → MEMORY
+Quality check only. Do NOT stop until SESSION COMPLETE.
 ===== END =====
 ```
 
-**Agents used:** Coordinator → Verifier → MemoryKeeper
+**Phases:** Verify (tests + 6-lens review) → Memory (commit)
 
 ---
 
@@ -250,12 +249,12 @@ Tech Stack: auto-detect
 Special Requirements: none
 Reference Files: none
 ===== EXECUTION INSTRUCTIONS =====
-You are the Coordinator. Dispatch: @verifier → @builder → @verifier → @memorykeeper
-Test → Fix → Re-verify pipeline. Do NOT stop until SESSION COMPLETE.
+Execute phases: VERIFY → BUILD → VERIFY → MEMORY
+Test → Fix → Re-verify. Do NOT stop until SESSION COMPLETE.
 ===== END =====
 ```
 
-**Agents used:** Coordinator → Verifier → Builder (fixes) → Verifier (re-check) → MemoryKeeper
+**Phases:** Verify (find failures) → Build (fix) → Verify (re-check) → Memory (commit)
 
 ---
 
@@ -270,12 +269,12 @@ Tech Stack: auto-detect
 Special Requirements: Must not break any existing tests or functionality.
 Reference Files: [Files to refactor, or "none"]
 ===== EXECUTION INSTRUCTIONS =====
-You are the Coordinator. Dispatch: @architect → @builder → @verifier → @memorykeeper
-Refactor pipeline. Do NOT stop until SESSION COMPLETE.
+Execute phases: DESIGN → BUILD → VERIFY → MEMORY
+Refactor only. Do NOT stop until SESSION COMPLETE.
 ===== END =====
 ```
 
-**Agents used:** Coordinator → Architect (plan) → Builder → Verifier → MemoryKeeper
+**Phases:** Design (refactor plan) → Build (implement) → Verify (test) → Memory (commit)
 
 ---
 
@@ -290,12 +289,12 @@ Tech Stack: N/A
 Special Requirements: none
 Reference Files: [Existing prompt files, or "none"]
 ===== EXECUTION INSTRUCTIONS =====
-You are the Coordinator. Dispatch: @prompt-engineer → @memorykeeper
-Prompt engineering pipeline only. Do NOT stop until SESSION COMPLETE.
+Execute phases: BUILD → MEMORY
+Prompt engineering only. Do NOT stop until SESSION COMPLETE.
 ===== END =====
 ```
 
-**Agents used:** Coordinator → PromptEngineer → MemoryKeeper
+**Phases:** Build (write/improve prompts) → Memory (commit)
 
 ---
 
@@ -305,23 +304,23 @@ Prompt engineering pipeline only. Do NOT stop until SESSION COMPLETE.
 @coordinator
 
 ===== PROJECT REQUEST =====
-Project: Validate the entire agent team. Run TestRunner against all 10 agents, then AgentAuditor for conflicts/gaps.
+Project: Validate the entire agent team. Run synthetic tests against all 10 agents, then audit for conflicts/gaps.
 Tech Stack: N/A
 Special Requirements: none
 Reference Files: All files in agents/
 ===== EXECUTION INSTRUCTIONS =====
-You are the Coordinator. Dispatch: @test-runner → @agent-auditor → @memorykeeper
-Agent validation pipeline. Do NOT stop until SESSION COMPLETE.
+Execute phases: VERIFY → MEMORY
+Agent validation. Do NOT stop until SESSION COMPLETE.
 ===== END =====
 ```
 
-**Agents used:** Coordinator → TestRunner → AgentAuditor → MemoryKeeper
+**Phases:** Verify (test all agents + audit team) → Memory (commit)
 
 ---
 
 ## MIX AND MATCH — Build Your Own Pipeline
 
-Don't see your exact scenario? Build a custom pipeline. Just list the agents you want in the `EXECUTION INSTRUCTIONS` block:
+Don't see your exact scenario? Build a custom pipeline. Just list the phases you want in the `EXECUTION INSTRUCTIONS` block:
 
 ```
 @coordinator
@@ -332,34 +331,28 @@ Tech Stack: auto-detect
 Special Requirements: [Your requirements]
 Reference Files: [Your references]
 ===== EXECUTION INSTRUCTIONS =====
-You are the Coordinator. Dispatch these agents in this exact order:
-@[agent1] → @[agent2] → @[agent3] → @memorykeeper
+Execute phases: [PHASE1] → [PHASE2] → [PHASE3] → MEMORY
 Do NOT stop until SESSION COMPLETE.
 ===== END =====
 ```
 
-### Agent Reference (pick what you need)
+### Phase Reference (pick what you need)
 
-| Agent | What It Does | Use When... |
+| Phase | What It Does | Use When... |
 |-------|-------------|-------------|
-| `@architect` | Designs system, writes spec + file map | You need planning before building |
-| `@uiux-specialist` | Design system, visual specs, WCAG audit | You have frontend UI work |
-| `@builder` | Writes code with TDD | You need code written or changed |
-| `@security-auditor` | OWASP Top 10 scan + report | You handle auth, APIs, user input |
-| `@prompt-engineer` | Writes/audits AI prompts | You have AI/LLM features |
-| `@verifier` | Runs tests + 6-lens code review | You need quality verification |
-| `@memorykeeper` | Commits, updates todo/lessons | **Always include last** |
-| `@test-runner` | Validates agent files work | You edited agent files |
-| `@agent-auditor` | Checks agent team for conflicts | After test-runner, or agent changes |
+| `DESIGN` | System architecture, component specs, file map, UI design | You need planning before building |
+| `BUILD` | TDD implementation — failing tests first, then code | You need code written or changed |
+| `SECURITY` | OWASP Top 10 scan, auth hardening, injection checks | You handle auth, APIs, user input |
+| `VERIFY` | Runs full test suite + 6-lens code review | You need quality verification |
+| `MEMORY` | Updates todo.md, lessons.md, git commit | **Always include last** |
 
 ### Rules for Custom Pipelines
 
-1. **`@memorykeeper` always goes last** — it commits and closes the session
-2. **`@architect` goes before `@builder`** — design before code
-3. **`@uiux-specialist` goes before `@builder`** (design mode) or after (audit mode)
-4. **`@verifier` goes after `@builder`** — verify what was built
-5. **`@security-auditor` goes after `@builder`** — audit what was written
-6. **You can skip any agent you don't need** — Coordinator will only dispatch what you list
+1. **MEMORY always goes last** — it commits and closes the session
+2. **DESIGN goes before BUILD** — plan before code
+3. **VERIFY goes after BUILD** — verify what was built
+4. **SECURITY goes after BUILD** — audit what was written
+5. **You can skip any phase you don't need** — Coordinator executes only the phases you list
 
 ---
 

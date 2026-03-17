@@ -1,6 +1,6 @@
 # HOW TO USE YOUR AGENT TEAM
 
-**10 agents. One message. Every dispatched agent finishes.**
+**10 agents. One message. Full session.**
 
 > **Just want a quick prompt for a specific task?** Skip this file and go to [QUICK_START.md](QUICK_START.md) — it has ready-to-paste prompts for bug fixes, security audits, UI reviews, and more. Come back here for the full reference.
 
@@ -8,7 +8,30 @@
 
 ## What This Is
 
-This is an AI coding team — 10 specialized agents that work together inside **VS Code Copilot Agent Mode**. You send **one message**, Copilot loops internally for free after that, and the Coordinator dispatches the agents your request needs. Not every request needs all 10 — a bug fix doesn't need UIUXSpecialist designing a color system. But whichever agents ARE dispatched, **every single one must fully complete its work** before the session ends. No agent gets skipped midway. No half-finished jobs. It can take hours. That's fine. You send one message and walk away.
+This is an AI coding team — 10 specialized agents that work inside **VS Code Copilot Agent Mode**. You send **one message**, and the Coordinator handles the full session: planning, coding, testing, verifying, and updating task memory. It works through phases internally — design, build, test, verify, memory update — drawing on the specialized knowledge from each agent file as needed.
+
+Not every request needs all phases — a bug fix skips design, a security audit skips coding. But your `tasks/todo.md` and `tasks/lessons.md` files ALWAYS get updated at the end so your project builds memory over time.
+
+---
+
+## CRITICAL: Folder Setup
+
+**The files from this repo must be at your project ROOT, not inside a subfolder.** VS Code Copilot discovers `.github/copilot-instructions.md` and `agents/*.agent.md` files from the workspace root. If they're nested inside a subfolder, Copilot can't find them and `@coordinator` won't work.
+
+```
+✅ CORRECT                           ❌ WRONG
+your-project/                        your-project/
+├── .github/                         └── ultimate-claude-prompt/
+│   └── copilot-instructions.md          ├── .github/
+├── agents/                              ├── agents/
+├── skills/                              └── ...
+├── docs/
+├── tasks/
+├── CLAUDE.md
+└── src/  ← your code
+```
+
+Also make sure your VS Code workspace is open to the **project root** (the folder that contains `.github/`, `agents/`, etc.) — not to a parent folder or the prompt repo folder itself.
 
 ---
 
@@ -16,8 +39,8 @@ This is an AI coding team — 10 specialized agents that work together inside **
 
 | Environment | Works? | Why |
 |---|---|---|
-| **VS Code — Agent Mode (Chat)** | **YES** | 1 premium request per message you send. Copilot loops internally for free — reads files, writes code, runs terminal, dispatches agents, all at no extra cost. This is the target environment. |
-| GitHub Copilot Coding Agent (Issues/PRs) | No | That environment uses 1 premium request per full session via GitHub Issues. The agent model is different — agents don't run locally, they run in a cloud container. This team is designed for local VS Code execution. |
+| **VS Code — Agent Mode (Chat)** | **YES** | 1 premium request per message you send. Copilot loops internally for free — reads files, writes code, runs terminal, all at no extra cost. This is the target environment. |
+| GitHub Copilot Coding Agent (Issues/PRs) | No | Different agent model — runs in cloud containers, not local VS Code. |
 
 **How it works:** You open VS Code → open the Copilot Chat panel → select **Agent Mode** → paste the universal prompt below → press Enter → wait for SESSION COMPLETE.
 
@@ -27,7 +50,7 @@ This is an AI coding team — 10 specialized agents that work together inside **
 
 | # | Agent | What It Does |
 |---|---|---|
-| 1 | **Coordinator** | Reads your request. Detects your tech stack. Plans the session. Dispatches every other agent in the right order. Enforces completion. Runs first, orchestrates everything. |
+| 1 | **Coordinator** | Reads your request. Detects your tech stack. Plans the session. Executes all work through phases (DESIGN → BUILD → SECURITY → VERIFY → MEMORY). Enforces completion. Runs first, does everything. |
 | 2 | **Architect** | Designs the system. Breaks the project into components. Writes the file map, data models, API routes, build order. Produces the spec that Builder follows. No code — just the blueprint. |
 | 3 | **UIUXSpecialist** | Establishes the design system — colors, typography, spacing, component styles. Writes the visual spec for every screen. Ensures accessibility (WCAG). Runs before Builder (design) or after Builder (audit). |
 | 4 | **Builder** | The coder. Writes failing tests first (TDD), then implements until tests pass. Follows Architect's spec and UIUXSpecialist's design system. Handles all files, all code, all terminal commands. |
@@ -40,37 +63,39 @@ This is an AI coding team — 10 specialized agents that work together inside **
 
 **The full pipeline (for a complete build):**
 ```
-Coordinator → Architect → UIUXSpecialist (design) → Builder → SecurityAuditor → PromptEngineer (if AI) → Verifier → (Builder fix loop if FAIL) → Verifier (re-check) → MemoryKeeper → SESSION COMPLETE
+@coordinator executes ALL phases:
+DESIGN → BUILD → SECURITY → VERIFY → MEMORY → SESSION COMPLETE
 ```
 
 **The validation pipeline (for agent team health):**
 ```
-Coordinator → TestRunner → AgentAuditor → MemoryKeeper → SESSION COMPLETE
+@coordinator or @test-runner → @agent-auditor → update tasks/ → SESSION COMPLETE
 ```
 
-Not every request runs the full pipeline. Coordinator picks the right agents for the job. See "Which Agents Run When" below.
+Not every request runs all phases. The Coordinator picks the right phases for the job. See "Which Phases Run When" below.
 
 ---
 
-## Which Agents Run When
+## Which Phases Run When
 
-Coordinator decides automatically, but here's what to expect:
+The Coordinator decides automatically based on your request:
 
-| Request Type | Agents Dispatched |
+| Request Type | Phases Executed |
 |---|---|
-| **Full app from scratch** | All 8: Coordinator → Architect → UIUXSpecialist → Builder → SecurityAuditor → PromptEngineer → Verifier → MemoryKeeper |
-| **New frontend feature** | Coordinator → Architect → UIUXSpecialist (design) → Builder → SecurityAuditor → Verifier → UIUXSpecialist (audit) → MemoryKeeper |
-| **New backend feature** | Coordinator → Architect → Builder → SecurityAuditor → Verifier → MemoryKeeper |
-| **Bug fix** | Coordinator → Builder → Verifier → MemoryKeeper |
-| **Security audit** | Coordinator → SecurityAuditor → Builder (fixes) → Verifier → MemoryKeeper |
-| **UI polish / redesign** | Coordinator → UIUXSpecialist (audit) → Builder (fixes) → Verifier → MemoryKeeper |
-| **AI/LLM feature** | Coordinator → Architect → PromptEngineer → Builder → SecurityAuditor → Verifier → MemoryKeeper |
-| **Writing/improving prompts or agents** | Coordinator → PromptEngineer → MemoryKeeper |
-| **Validate agent team** | Coordinator → TestRunner → AgentAuditor → MemoryKeeper |
+| **Full app from scratch** | DESIGN → BUILD → SECURITY → VERIFY → MEMORY |
+| **New frontend feature** | DESIGN → BUILD → VERIFY → MEMORY |
+| **New backend feature** | DESIGN → BUILD → SECURITY → VERIFY → MEMORY |
+| **Bug fix** | BUILD → VERIFY → MEMORY |
+| **Security audit** | SECURITY → MEMORY |
+| **Security audit + fix** | SECURITY → BUILD → VERIFY → MEMORY |
+| **UI polish / redesign** | BUILD → VERIFY → MEMORY |
+| **AI/LLM feature** | DESIGN → BUILD → SECURITY → VERIFY → MEMORY |
+| **Code review / tests** | VERIFY → MEMORY |
+| **Refactor** | DESIGN → BUILD → VERIFY → MEMORY |
 
-**The rule:** Whichever agents Coordinator dispatches, **every one of them must fully complete its workflow and write its handoff note** before the next agent starts. No agent is skipped once dispatched. MemoryKeeper always runs last — no session ends without SESSION COMPLETE.
+**The rule:** Every session ALWAYS ends with the MEMORY phase — `tasks/todo.md` and `tasks/lessons.md` get updated, work gets committed, and SESSION COMPLETE gets printed.
 
-**Note:** TestRunner and AgentAuditor are only dispatched when validating the agent team itself — not on regular project sessions.
+**Want to invoke a specific agent directly?** You can call `@security-auditor`, `@builder`, `@verifier`, etc. individually. Each agent reads and updates `tasks/todo.md` and `tasks/lessons.md` independently. See [QUICK_START.md](QUICK_START.md) for ready-to-paste prompts.
 
 ---
 
@@ -93,30 +118,21 @@ Reference Files: [IF YOU HAVE DESIGN MOCKUPS, WIREFRAMES, OR EXISTING SPECS — 
 
 ===== EXECUTION INSTRUCTIONS =====
 
-You are the Coordinator. You have 8 agents at your disposal:
-@architect @builder @verifier @memorykeeper @prompt-engineer @security-auditor @uiux-specialist
+You are the Coordinator. Execute the FULL session yourself by working through these phases:
 
-Execute the FULL pipeline:
-
-1. Read CLAUDE.md, tasks/todo.md, and tasks/lessons.md — understand the system and any prior context
-2. Detect or confirm the tech stack
-3. Write the session plan to tasks/current_session_plan.md
-4. Dispatch ALL agents in sequence:
-   - Architect: design the system, write the spec and file map
-   - UIUXSpecialist (DESIGN mode): establish design system, write visual specs for every component
-   - Builder: implement everything with TDD (tests first, then code, then verify)
-   - SecurityAuditor: audit all code for OWASP Top 10 and security issues
-   - PromptEngineer: audit/write any AI-facing prompts (skip if project has no AI/LLM features)
-   - Verifier: run full test suite, 6-lens code review, PASS or FAIL
-   - If Verifier returns FAIL → send Builder back to fix → re-run Verifier
-   - UIUXSpecialist (AUDIT mode): review the final UI for polish and accessibility
-   - If UIUXSpecialist finds critical issues → send Builder back to fix
-   - MemoryKeeper: update todo.md, update lessons.md, commit all work, write SESSION COMPLETE report
-5. Do NOT stop until MemoryKeeper prints SESSION COMPLETE
-6. Do NOT ask me any questions — make reasonable assumptions and document them in the session plan
-7. If any agent fails 3 times on the same task, document the blocker in tasks/todo.md and move on — do not loop forever
-
-**For agent team validation, dispatch instead:** @test-runner @agent-auditor @memorykeeper
+1. Read tasks/todo.md and tasks/lessons.md FIRST — understand prior context and avoid past mistakes
+2. Read CLAUDE.md — understand the engineering rules
+3. Detect or confirm the tech stack
+4. Write the session plan to tasks/current_session_plan.md
+5. Execute ALL phases yourself in order:
+   - DESIGN: break the system into components, write spec and file map (skip for bug fixes)
+   - BUILD: implement everything with TDD (write failing test first → code → pass → commit)
+   - SECURITY: audit all new code for OWASP Top 10 and security issues (skip for non-security work)
+   - VERIFY: run full test suite, lint, build — if anything fails, fix it and re-verify
+   - MEMORY: update tasks/todo.md, update tasks/lessons.md, git commit, print SESSION COMPLETE
+6. Do NOT stop until you print SESSION COMPLETE
+7. Do NOT ask me any questions — make reasonable assumptions and document them
+8. If the same issue fails 3 times, document the blocker in tasks/todo.md and move on
 
 ===== END =====
 ```
@@ -161,71 +177,46 @@ YOU SEND ONE MESSAGE
         │
         ▼
 ┌─────────────────┐
-│   COORDINATOR    │  Reads your request. Reads CLAUDE.md, todo.md, lessons.md.
+│   COORDINATOR    │  Reads your request. Reads todo.md, lessons.md, CLAUDE.md.
 │                  │  Detects tech stack. Writes session plan.
-│                  │  Decides WHICH agents this request needs.
-│                  │  Dispatches them in order.
+│                  │  Executes ALL phases itself (see below).
 └────────┬────────┘
          │
-         ▼  (only if request needs design/planning)
+         ▼  DESIGN PHASE (only if request needs design/planning)
 ┌─────────────────┐
-│   ARCHITECT      │  Designs the system. Components, data models, API routes,
+│                  │  Designs the system. Components, data models, API routes,
 │                  │  file map, build order. Writes tasks/task_plan.md.
-│                  │  ✅ Must complete fully before next agent.
 └────────┬────────┘
          │
-         ▼  (only if request has frontend UI)
-┌─────────────────────┐
-│  UIUX SPECIALIST    │  (DESIGN mode) Picks fonts, colors, spacing. Writes
-│                     │  component specs. Writes tasks/design_system.md.
-│                     │  ✅ Must complete fully before next agent.
-└────────┬────────────┘
-         │
-         ▼  (almost always)
+         ▼  BUILD PHASE (almost always)
 ┌─────────────────┐
-│    BUILDER       │  Writes failing tests → implements code → tests pass.
-│                  │  Follows Architect's spec + UIUXSpecialist's design.
+│                  │  Writes failing tests → implements code → tests pass.
+│                  │  TDD: Red → Green → Refactor.
 │                  │  Commits after each logical unit.
-│                  │  ✅ Must complete fully before next agent.
 └────────┬────────┘
          │
-         ▼  (if auth, APIs, user input, or external data)
-┌─────────────────────┐
-│  SECURITY AUDITOR   │  Scans every file. OWASP Top 10 checklist. Auth,
-│                     │  injection, XSS, CSRF, secrets. Severity-rated report.
-│                     │  ✅ Must complete fully before next agent.
-└────────┬────────────┘
-         │
-         ▼  (only if AI/LLM features)
-┌─────────────────────┐
-│  PROMPT ENGINEER    │  Reviews system prompts, agent instructions, prompt
-│  (conditional)      │  templates. Rewrites if quality is low.
-│                     │  ✅ Must complete fully before next agent.
-└────────┬────────────┘
-         │
-         ▼  (almost always — if any code was written)
+         ▼  SECURITY PHASE (if auth, APIs, user input, or external data)
 ┌─────────────────┐
-│    VERIFIER      │  Runs ALL tests. Reviews code through 6 lenses.
-│                  │  PASS → continue. FAIL → Builder fixes → re-check.
-│                  │  ✅ Must complete fully before next agent.
+│                  │  Scans code for OWASP Top 10. Auth, injection, XSS,
+│                  │  CSRF, secrets. Fixes critical issues.
 └────────┬────────┘
          │
-         ▼  (if frontend UI was implemented)
-┌─────────────────────┐
-│  UIUX SPECIALIST    │  (AUDIT mode) Checks visual consistency, UX quality,
-│                     │  accessibility (WCAG). Flags remaining issues.
-│                     │  ✅ Must complete fully before next agent.
-└────────┬────────────┘
+         ▼  VERIFY PHASE (almost always — if any code was written)
+┌─────────────────┐
+│                  │  Runs ALL tests. Runs lint. Runs build.
+│                  │  If anything fails → fix → re-verify.
+└────────┬────────┘
          │
-         ▼  (ALWAYS — every session ends here)
-┌─────────────────────┐
-│  MEMORY KEEPER      │  Updates tasks/todo.md. Updates tasks/lessons.md.
-│                     │  Commits everything to git. Writes SESSION COMPLETE.
-│                     │  ✅ ALWAYS runs. Session is not done without this.
-└─────────────────────┘
+         ▼  MEMORY PHASE (ALWAYS — every session ends here)
+┌─────────────────┐
+│                  │  Updates tasks/todo.md with completed work.
+│                  │  Updates tasks/lessons.md with insights.
+│                  │  Git commits everything. Prints SESSION COMPLETE.
+│                  │  ✅ ALWAYS runs. Session is not done without this.
+└─────────────────┘
          │
          ▼
-    SESSION COMPLETE — every dispatched agent finished its job.
+    SESSION COMPLETE — todo.md updated, lessons.md updated, work committed.
 ```
 
 ---
@@ -249,16 +240,16 @@ Reference Files: All files in agents/ directory
 
 ===== EXECUTION INSTRUCTIONS =====
 
-You are the Coordinator. Dispatch these agents in order:
-1. @test-runner — validate all 10 agents produce expected outputs using synthetic test cases
-2. @agent-auditor — cross-read all agent files, detect conflicts/overlaps/gaps, assess context limit risks
-3. @memorykeeper — record results, update lessons.md, commit
+You are the Coordinator. Execute these phases in order:
+1. Test Runner phase — validate all 10 agents produce expected outputs using synthetic test cases
+2. Agent Audit phase — cross-read all agent files, detect conflicts/overlaps/gaps, assess context limit risks
+3. Memory phase — record results, update lessons.md, commit
 
 Report results in:
 - tasks/agent_test_results.md (TestRunner output)
 - tasks/agent_audit_report.md (AgentAuditor output)
 
-Do not ask questions. Do not stop until MemoryKeeper prints SESSION COMPLETE.
+Do not ask questions. Do not stop until SESSION COMPLETE.
 
 ===== END =====
 ```
@@ -269,7 +260,7 @@ Do not ask questions. Do not stop until MemoryKeeper prints SESSION COMPLETE.
 
 **1 premium request per message you send.** That's it.
 
-Everything Copilot does after your message — reading files, writing code, running terminal commands, dispatching agents, looping through the pipeline — is **free internal looping.** You pay for the message, not for the work.
+Everything Copilot does after your message — reading files, writing code, running terminal commands, executing phases, looping through the pipeline — is **free internal looping.** You pay for the message, not for the work.
 
 One message. Full project. One premium request.
 
@@ -294,30 +285,21 @@ Reference Files: none
 
 ===== EXECUTION INSTRUCTIONS =====
 
-You are the Coordinator. You have 10 agents at your disposal:
-@architect @builder @verifier @memorykeeper @prompt-engineer @security-auditor @uiux-specialist @test-runner @agent-auditor
+You are the Coordinator. Execute the FULL session yourself by working through these phases:
 
-Execute the FULL pipeline:
-
-1. Read CLAUDE.md, tasks/todo.md, and tasks/lessons.md — understand the system and any prior context
-2. Detect or confirm the tech stack
-3. Write the session plan to tasks/current_session_plan.md
-4. Decide which agents this request needs and dispatch them in the correct order:
-   - Architect — if the request needs system design, file planning, or component breakdown
-   - UIUXSpecialist (DESIGN mode) — if the request has frontend UI that needs a design system or visual spec
-   - Builder — if any code needs to be written or changed (almost always)
-   - SecurityAuditor — if the request touches auth, APIs, user input, payments, or external data
-   - PromptEngineer — if the request involves AI/LLM features, system prompts, or agent instructions
-   - Verifier — if any code was written (almost always — runs tests + code review)
-   - UIUXSpecialist (AUDIT mode) — if Builder implemented frontend UI (review for polish and accessibility)
-   - MemoryKeeper — ALWAYS runs last (updates todo, lessons, commits, SESSION COMPLETE)
-5. Every dispatched agent MUST fully complete its workflow and write its handoff note before the next agent starts
-6. If Verifier returns FAIL → send Builder back to fix → re-run Verifier. Loop until PASS.
-7. Do NOT stop until MemoryKeeper prints SESSION COMPLETE
-8. Do NOT ask me any questions — make reasonable assumptions and document them in the session plan
-9. If any agent fails 3 times on the same task, document the blocker in tasks/todo.md and move on — do not loop forever
-
-**For agent team validation, dispatch instead:** @test-runner @agent-auditor @memorykeeper
+1. Read tasks/todo.md and tasks/lessons.md FIRST — understand prior context and avoid past mistakes
+2. Read CLAUDE.md — understand the engineering rules
+3. Detect or confirm the tech stack
+4. Write the session plan to tasks/current_session_plan.md
+5. Execute ALL phases yourself in order:
+   - DESIGN: break the system into components, write spec and file map
+   - BUILD: implement everything with TDD (write failing test first → code → pass → commit)
+   - SECURITY: audit all new code for OWASP Top 10 and security issues
+   - VERIFY: run full test suite, lint, build — if anything fails, fix it and re-verify
+   - MEMORY: update tasks/todo.md, update tasks/lessons.md, git commit, print SESSION COMPLETE
+6. Do NOT stop until you print SESSION COMPLETE
+7. Do NOT ask me any questions — make reasonable assumptions and document them
+8. If the same issue fails 3 times, document the blocker in tasks/todo.md and move on
 
 ===== END =====
 ```
@@ -339,7 +321,7 @@ Reference Files: See src/components/Navbar.tsx for where the toggle should go.
 
 ===== EXECUTION INSTRUCTIONS =====
 
-[same execution instructions block as above]
+[same execution instructions block as Example 1]
 
 ===== END =====
 ```
@@ -361,12 +343,12 @@ Reference Files: Check src/middleware.ts and src/lib/auth.ts
 
 ===== EXECUTION INSTRUCTIONS =====
 
-[same execution instructions block as above]
+[same execution instructions block as Example 1]
 
 ===== END =====
 ```
 
-### Example 4 — AI-powered feature (triggers PromptEngineer)
+### Example 4 — AI-powered feature (triggers PromptEngineer phase)
 
 ```
 @coordinator
@@ -377,13 +359,13 @@ Project: Add an AI recipe suggestion feature. Users describe what ingredients th
 
 Tech Stack: auto-detect
 
-Special Requirements: This uses the OpenAI API — system prompts need to be reviewed by PromptEngineer. Rate limit to 10 suggestions per user per day. Cache suggestions for identical inputs.
+Special Requirements: This uses the OpenAI API — system prompts need to be audited. Rate limit to 10 suggestions per user per day. Cache suggestions for identical inputs.
 
 Reference Files: See .env.example for the OPENAI_API_KEY variable.
 
 ===== EXECUTION INSTRUCTIONS =====
 
-[same execution instructions block as above]
+[same execution instructions block as Example 1]
 
 ===== END =====
 ```
@@ -430,19 +412,25 @@ your-project/
 ## FAQ
 
 **Q: Do I need to send multiple messages to run different agents?**
-No. One message triggers everything. Coordinator decides which agents are needed, dispatches them, and Copilot loops internally for free.
+No. One message triggers everything. The Coordinator works through all phases (design, build, test, verify, memory) in a single session. Copilot loops internally for free.
 
-**Q: Does every request use all 10 agents?**
-No. Coordinator picks the agents your request actually needs. A bug fix might only use Builder → Verifier → MemoryKeeper. A full app uses all 8 project agents (TestRunner and AgentAuditor are for agent team validation, not regular builds). But whichever agents ARE dispatched, every single one must fully complete its work — no agent gets skipped once it starts.
+**Q: Does every request use all phases?**
+No. The Coordinator picks the right phases for your request. A bug fix skips design and goes straight to build → verify → memory. A full app runs all phases. But `tasks/todo.md` and `tasks/lessons.md` ALWAYS get updated at the end.
 
-**Q: Can I force specific agents to run or be skipped?**
-Yes — in the Special Requirements field, you can write things like "Make sure SecurityAuditor runs" or "Skip UIUXSpecialist — this is backend only." Coordinator will respect that.
+**Q: Can I force specific phases to run or be skipped?**
+Yes — in the Special Requirements field, you can write things like "Run a security audit" or "Skip UI work — this is backend only." The Coordinator will adjust.
+
+**Q: Why aren't tasks/todo.md and tasks/lessons.md updating?**
+Make sure: (1) the files exist in `tasks/` folder, (2) VS Code is open to the project root (the folder containing `agents/`, `.github/`, etc.), and (3) you're using `@coordinator` in Agent Mode. The `.github/copilot-instructions.md` file mandates reading and updating these files on every conversation.
 
 **Q: How long does it take?**
-Depends on complexity. A bug fix might take 15-30 minutes. A full app can take 2-5 hours. Time doesn't matter — you send one message and walk away.
+Depends on complexity. A bug fix might take 15-30 minutes. A full app can take 2-5 hours. You send one message and walk away.
 
 **Q: What if it gets stuck or errors out midway?**
 Send a new message: `@coordinator Continue from where you left off. Read tasks/todo.md and tasks/current_session_plan.md to understand the current state. Do not restart — pick up.` That costs one more premium request but resumes the session.
 
 **Q: Does this work with any tech stack?**
-Yes. The agents detect your stack from package.json, requirements.txt, go.mod, Cargo.toml, etc. The embedded rules cover web (React, Next.js, Vue, Angular, Svelte), backend (Node, Python, Go, Rust), mobile (React Native, Flutter), and more.
+Yes. The Coordinator detects your stack from package.json, requirements.txt, go.mod, Cargo.toml, etc. The embedded rules cover web (React, Next.js, Vue, Angular, Svelte), backend (Node, Python, Go, Rust), mobile (React Native, Flutter), and more.
+
+**Q: What if I just want to use one specific agent (like security-auditor)?**
+See [QUICK_START.md](QUICK_START.md) for ready-to-paste prompts for every use case. Or invoke any agent directly: `@security-auditor Audit all source files in src/ for OWASP Top 10 vulnerabilities.` Every agent reads `tasks/todo.md` and `tasks/lessons.md` at start and updates them when done.

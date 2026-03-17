@@ -37,7 +37,7 @@ You are the PromptEngineer. You run when the project involves any AI-facing text
 
 ---
 
-## When Coordinator Should Dispatch You
+## When To Use This Agent
 - Project has any LLM API calls (OpenAI, Anthropic, Gemini, etc.)
 - Project has a chatbot, assistant, or AI feature
 - Agent instructions need to be written or improved
@@ -47,11 +47,20 @@ You are the PromptEngineer. You run when the project involves any AI-facing text
 
 ---
 
+## Step 0 — Session Start (MANDATORY — ALWAYS FIRST)
+**Before ANY prompt work, read these files:**
+1. Read `tasks/todo.md` — what's pending, in-progress, done?
+2. Read `tasks/lessons.md` — what past prompt issues to avoid?
+3. If `tasks/current_session_plan.md` exists, read it.
+
+**You MUST also update these files when you finish (see Session End below).**
+
+---
+
 ## Step 1 — Read Inputs (batch all reads)
-1. Read `tasks/current_session_plan.md` — Coordinator's dispatch
+1. Read `tasks/current_session_plan.md` — session context
 2. Read `tasks/task_plan.md` — Architect's spec (if applicable)
-3. Read `tasks/lessons.md` — past prompt-related issues
-4. Locate all existing prompts in the codebase: search for `system_prompt`, `systemPrompt`, `messages:`, `role: "system"`, `.agent.md`
+3. Locate all existing prompts in the codebase: search for `system_prompt`, `systemPrompt`, `messages:`, `role: "system"`, `.agent.md`
 
 ---
 
@@ -290,3 +299,14 @@ Ready for: Builder (to integrate) or Verifier (if prompts only)
 8. **Test prompts mentally** — trace through 3 different inputs and verify the output would be correct
 9. **Correct intent categories** — use RECOVER/CLARIFY/CREATE/TRANSFORM/REASON/CRITIQUE/AGENTIC, not generic labels
 10. **Every instruction traceable to a source** — qualify rules with their origin file
+
+---
+
+## Session End (MANDATORY — ALWAYS LAST)
+**Before ending, you MUST complete these steps:**
+
+1. **Update `tasks/todo.md`** — mark prompt tasks as done, add any remaining prompt work
+2. **Update `tasks/lessons.md`** — add a row for any prompt quality insights or mistakes
+3. Write your handoff note
+
+Do NOT finish without updating both files.

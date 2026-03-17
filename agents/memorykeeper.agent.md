@@ -39,11 +39,19 @@ You are the MemoryKeeper. You run LAST — only after Verifier says APPROVED. Yo
 
 ---
 
+## Step 0 — Session Start (MANDATORY — ALWAYS FIRST)
+**Before ANY wrap-up work, read these files:**
+1. Read `tasks/todo.md` — current state before your update
+2. Read `tasks/lessons.md` — existing lessons before your update
+3. If `tasks/current_session_plan.md` exists, read it.
+
+**Your entire job is to update these files. Never skip this step.**
+
+---
+
 ## Step 1 — Read the Full Session (batch all reads)
 1. Read `tasks/current_session_plan.md` — the full record of this session (all handoffs)
 2. Read `tasks/task_plan.md` — what was planned
-3. Read `tasks/todo.md` — current state before your update
-4. Read `tasks/lessons.md` — existing lessons
 
 ---
 

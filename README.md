@@ -12,7 +12,7 @@ This is two things in one:
 
 1. **A universal instruction set** — 11 skill files + 11 reference docs + a master CLAUDE.md that works in any AI coding environment (VS Code Copilot, Claude Code, Cursor, Windsurf, API). Drop it into any project and Claude/Copilot immediately follows battle-tested engineering practices.
 
-2. **A 10-agent AI coding team** — specialized agents that work together in VS Code Copilot Agent Mode. You describe what you want, Coordinator dispatches the right agents, and every dispatched agent fully completes its work before the session ends. No supervision needed.
+2. **A 10-agent AI coding team** — specialized agents that work inside VS Code Copilot Agent Mode. You describe what you want, Coordinator reads task history, plans the session, and executes work through phases (DESIGN → BUILD → SECURITY → VERIFY → MEMORY). It updates `tasks/todo.md` and `tasks/lessons.md` every session. No supervision needed.
 
 **Built from 40+ top AI coding repositories.** Every pattern, framework, and rule in this repo was extracted from real-world production use, not theory.
 
@@ -76,7 +76,7 @@ That's it. Copy a prompt, fill in the blanks, send it.
 
 | Agent | Role | When It Runs |
 |---|---|---|
-| **Coordinator** | Reads your request, detects tech stack, plans session, dispatches agents, enforces completion | Always first |
+| **Coordinator** | Reads your request, detects tech stack, plans session, executes all phases, enforces completion | Always first |
 | **Architect** | System design — components, data models, API routes, file map, build order | New features, full builds |
 | **UIUXSpecialist** | Design system (colors, typography, spacing), visual specs, WCAG accessibility | Frontend UI work |
 | **Builder** | TDD implementation — failing tests first, then code, then verify | Almost always |
@@ -84,10 +84,10 @@ That's it. Copy a prompt, fill in the blanks, send it.
 | **PromptEngineer** | System prompt quality, agent instructions, prompt frameworks | AI/LLM features |
 | **Verifier** | Full test suite, 6-lens code review (dev, security, perf, QA, UX, a11y), binary PASS/FAIL | After any code changes |
 | **MemoryKeeper** | Updates todo/lessons, git commits, session archive, SESSION COMPLETE report | Always last |
-| **TestRunner** | Validates all agents produce expected outputs using synthetic test cases | After agent edits, Opus upgrades |
+| **TestRunner** | Validates all agents produce expected outputs using synthetic test cases | After agent edits, model upgrades |
 | **AgentAuditor** | Detects conflicts, overlaps, gaps, and context limit risks between agents | After TestRunner, agent changes |
 
-**Coordinator picks the right agents for each request.** A bug fix uses Builder → Verifier → MemoryKeeper. A full app uses all 8 project agents. TestRunner and AgentAuditor are dispatched only for agent team validation. Every dispatched agent must fully complete before the session ends.
+**How it works:** Copilot runs ONE agent per conversation. When you invoke `@coordinator`, it executes all needed phases itself (design, build, security, verify, memory). You can also invoke specialized agents directly (e.g. `@security-auditor` for a standalone security audit). Every agent reads `tasks/todo.md` + `tasks/lessons.md` at session start and updates them before finishing.
 
 See [HOW_TO_USE.md](HOW_TO_USE.md) for the universal prompt template, real examples, and detailed pipeline documentation.
 
@@ -104,7 +104,7 @@ See [HOW_TO_USE.md](HOW_TO_USE.md) for the universal prompt template, real examp
 | Claude API | No | **Yes** | Load CLAUDE.md as system prompt |
 | Claude.ai | No | **Yes** | Paste into project knowledge |
 
-The **agent team** (10 agents working together) only works in **VS Code Copilot Agent Mode** where Copilot loops internally for free after your message.
+The **agent team** (10 agents working through phases) only works in **VS Code Copilot Agent Mode** where Copilot loops internally for free after your message.
 
 The **instruction set** (CLAUDE.md + skills + docs) works everywhere — it makes any AI coding tool follow better engineering practices regardless of environment.
 
@@ -148,7 +148,7 @@ The **instruction set** (CLAUDE.md + skills + docs) works everywhere — it make
 
 | File | Agent |
 |---|---|
-| [agents/coordinator.agent.md](agents/coordinator.agent.md) | Coordinator — session recovery, dispatch matrix, model routing, 3-Strike Rule |
+| [agents/coordinator.agent.md](agents/coordinator.agent.md) | Coordinator — session recovery, phase execution, model routing, 3-Strike Rule |
 | [agents/architect.agent.md](agents/architect.agent.md) | Architect — brainstorming framework, complexity assessment, structured file maps |
 | [agents/builder.agent.md](agents/builder.agent.md) | Builder — TDD enforced, code archaeology, OWASP/a11y/UI rules inline |
 | [agents/verifier.agent.md](agents/verifier.agent.md) | Verifier — gate function, 6-lens review, eval-driven verification |
@@ -315,7 +315,7 @@ Synthesized from **40+ top AI coding repositories** including:
 
 ## Cost
 
-**VS Code Copilot Agent Mode:** 1 premium request per message you send. Copilot loops internally for free — reading files, writing code, running terminal, dispatching agents. One message = full project delivered.
+**VS Code Copilot Agent Mode:** 1 premium request per message you send. Copilot loops internally for free — reading files, writing code, running terminal, executing phases. One message = full project delivered.
 
 ---
 

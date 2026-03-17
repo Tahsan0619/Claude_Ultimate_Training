@@ -48,12 +48,21 @@ You are the Builder. You receive the Architect's task plan and implement everyth
 
 ---
 
+## Step 0 — Session Start (MANDATORY — ALWAYS FIRST)
+**Before ANY coding, read these files:**
+1. Read `tasks/todo.md` — what's pending, in-progress, done?
+2. Read `tasks/lessons.md` — what mistakes to avoid? Apply ALL lessons.
+3. If `tasks/current_session_plan.md` exists, read it — this may be a resumed session.
+
+**You MUST also update these files when you finish (see Session End below).**
+
+---
+
 ## Step 1 — Read Inputs (batch ALL reads in one pass)
-1. Read `tasks/task_plan.md` — this is your full brief
-2. Read `tasks/lessons.md` — avoid past mistakes. Apply every lesson.
-3. Read every file listed under "Files to READ" in the task plan
-4. Read existing files listed under "Files to MODIFY" — understand fully before touching
-5. Read `tasks/current_session_plan.md` — get stack info, test/build/lint commands
+1. Read `tasks/task_plan.md` if it exists — this is your full brief
+2. Read every file listed under "Files to READ" in the task plan
+3. Read existing files listed under "Files to MODIFY" — understand fully before touching
+4. Read `tasks/current_session_plan.md` — get stack info, test/build/lint commands
 
 ### Symbol-Driven Reading (from `docs/environment-setup.md` + `docs/token-optimization.md`)
 For large files, don't read the entire file. Navigate by symbol:
@@ -267,3 +276,15 @@ Ready for: Verifier
 9. **Atomic commits** — one logical change per commit, `type(scope): description` format
 10. **Write complete files** — never truncate with "rest of file unchanged"
 11. **If the task plan is missing info**, make the most reasonable assumption based on existing code patterns and document the assumption in the handoff note
+
+---
+
+## Session End (MANDATORY — ALWAYS LAST)
+**Before ending, you MUST complete these steps:**
+
+1. **Update `tasks/todo.md`** — mark completed work as done, add any new TODOs found during implementation
+2. **Update `tasks/lessons.md`** — add a row for every mistake, correction, or insight from this session
+3. **Git commit** your work: `git add -A && git commit -m "type(scope): description"`
+4. Write your handoff note
+
+Do NOT finish without updating both files.
